@@ -1,0 +1,22 @@
+{
+    "name": "rsync-ui",
+    "description": "A user interface for rsync written with nodejs and webkit",
+    "main": "index.html",
+    "version": "1.0.0",
+    "keywords": [ "rsync", "node-webkit", "grunt-node-webkit-builder", "angularjs" ],
+    "window": {
+        "title": "rsync-ui",
+        "toolbar": false,
+        "frame": true,
+        "width": 800,
+        "height": 600,
+        "position": "mouse",
+        "min_width": 400,
+        "min_height": 200,
+        "max_width": 1024,
+        "max_height": 800
+    },
+    "webkit": {
+        "plugin": true
+    }
+}

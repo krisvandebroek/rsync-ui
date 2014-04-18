@@ -1,0 +1,36 @@
+<!doctype html>
+<html ng-app="rsync-ui-app" ng-controller="rsync-ui-app-controller">
+<head>
+    <title>rsync-ui</title>
+</head>
+<body>
+<!-- Test to show that AngularJs works -->
+<h1>Angular works:</h1>
+
+<div>I can add: 1 + 2 = {{ 1+2 }}.</div>
+<label>Name:</label>
+<input type="text" ng-model="yourName" placeholder="Enter a name here">
+<hr>
+<h3>Hello {{yourName}}!</h3>
+
+<!-- Test listing the files in a directory -->
+<h1>Reading files in a directory</h1>
+<ul>
+    <li ng-repeat="filename in filenames">{{filename}}</li>
+</ul>
+
+<!-- Test reading the contents of a file -->
+<code>File Contents: {{fileContents}}</code>
+<br/>
+
+<div>File Contents: {{filenames}} - {{somevar}} - {{fileContents}}</div>
+
+<div id="rsync-command-ui">
+    <h1>rsync</h1>
+</div>
+
+<script src="angular.js"></script>
+<script src="myscript.js"></script>
+<script src="rsync-ui.js"></script>
+</body>
+</html>

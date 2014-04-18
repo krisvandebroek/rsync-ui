@@ -1,2 +1,6 @@
-# .gitignore placeholder
+# Ignore IntelliJ IDEA files
 *.iml
+# Ignore nodejs generated files
+node_modules
+# Ignore grunt build files
+/build
