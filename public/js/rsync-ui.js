@@ -25,6 +25,16 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
         rsyncParams.stats = true;
 
         $scope.rsyncParams = rsyncParams;
+
+        function conditionalAppend(condition, base, toAppend) {
+            return (condition ? base + ' ' + toAppend : base);
+        }
+
+        $scope.rsyncCommand = function () {
+            command = 'rsync';
+            command = conditionalAppend(rsyncParams.dryRun, command, '--dryRun');
+            return command;
+        };
     }])
     .config(function ($stateProvider, $urlRouterProvider) {
         // For any unmatched url, redirect to /state1
@@ -37,16 +47,3 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
                 controller: 'RsyncCommandController'
             });
     });
-
-// dry-run
-// delete
-// delete-after
-// filter-file
-// archive
-// one-file-system
-// log-file
-// itemize-changes
-// verbose
-// human-readable
-// progress
-// stats
