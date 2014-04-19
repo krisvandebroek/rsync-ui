@@ -1,4 +1,12 @@
-angular.module('rsync-ui', [])
+//var fs = require('fs');
+
+var rsync_ui_app_dependencies = [
+    'ui.router',
+    'ui.bootstrap',
+    'poc-ui'
+];
+
+angular.module('rsync-ui-app', rsync_ui_app_dependencies)
     .controller('RsyncCommandController', ['$scope', function ($scope) {
         rsyncParams = {};
 
@@ -17,8 +25,18 @@ angular.module('rsync-ui', [])
         rsyncParams.stats = true;
 
         $scope.rsyncParams = rsyncParams;
-    }]);
+    }])
+    .config(function ($stateProvider, $urlRouterProvider) {
+        // For any unmatched url, redirect to /state1
+        $urlRouterProvider.otherwise("/rsync");
 
+        $stateProvider
+            .state('rsync', {
+                url: "/rsync",
+                templateUrl: "partials/rsync.html",
+                controller: 'RsyncCommandController'
+            });
+    });
 
 // dry-run
 // delete
