@@ -1,36 +1,43 @@
-<!doctype html>
-<html ng-app="rsync-ui-app" ng-controller="rsync-ui-app-controller">
+<!DOCTYPE html>
+<html ng-app="rsync-ui-app">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>rsync-ui</title>
+
+    <link href="js/lib/bootswatch/slate/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<!-- Test to show that AngularJs works -->
-<h1>Angular works:</h1>
+<body class="container-fluid">
 
-<div>I can add: 1 + 2 = {{ 1+2 }}.</div>
-<label>Name:</label>
-<input type="text" ng-model="yourName" placeholder="Enter a name here">
-<hr>
-<h3>Hello {{yourName}}!</h3>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">rsync-ui</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a ui-sref="rsync">Rsync</a></li>
+                <li><a ui-sref="poc">Proof of concept</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<!-- Test listing the files in a directory -->
-<h1>Reading files in a directory</h1>
-<ul>
-    <li ng-repeat="filename in filenames">{{filename}}</li>
-</ul>
+<div ui-view></div>
 
-<!-- Test reading the contents of a file -->
-<code>File Contents: {{fileContents}}</code>
-<br/>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-<div>File Contents: {{filenames}} - {{somevar}} - {{fileContents}}</div>
-
-<div id="rsync-command-ui">
-    <h1>rsync</h1>
-</div>
-
-<script src="angular.js"></script>
-<script src="myscript.js"></script>
-<script src="rsync-ui.js"></script>
+<script src="js/rsync-ui.js"></script>
+<script src="js/poc-ui.js"></script>
 </body>
 </html>
