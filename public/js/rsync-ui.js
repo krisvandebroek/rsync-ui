@@ -16,10 +16,10 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
         rsyncParams.dryRun = true;
         rsyncParams.delete = true;
         rsyncParams.deleteAfter = true;
-        rsyncParams.filterFile = '/opt/testFilter.txt';
+        rsyncParams.filterFile = '';
         rsyncParams.archive = true;
         rsyncParams.oneFileSystem = true;
-        rsyncParams.logFile = '/opt/testLogFile.txt';
+        rsyncParams.logFile = '';
         rsyncParams.itemizeChanges = true;
         rsyncParams.verbose = true;
         rsyncParams.humanReadable = true;
@@ -59,6 +59,22 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
             command = command + ' ' + rsyncParams.dest;
             return command;
         };
+
+        $scope.spawnRsyncCommand = function () {
+            $scope.rsyncOutput = '';
+            var spawnedLs = require('child_process').spawn('ls', ['-R', '/usr']);
+            spawnedLs.stdout.on('data', function (data) {
+                $scope.rsyncOutput += data;
+                // TODO Find out correct way to do this. I should pass the function to the $apply method.
+                $scope.$apply();
+            });
+            spawnedLs.stderr.on('data', function (data) {
+                console.log('stderr: ' + data);
+            });
+            spawnedLs.on('close', function (code) {
+                console.log('ended with code: ' + code);
+            });
+        }
     }])
     .config(function ($stateProvider, $urlRouterProvider) {
         // For any unmatched url, redirect to /state1
