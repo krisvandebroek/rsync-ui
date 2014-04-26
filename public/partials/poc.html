@@ -27,5 +27,10 @@
 
             <div>File Contents: {{filenames}} - {{somevar}} - {{fileContents}}</div>
         </tab>
+        <tab heading="Node LocalStorage">
+            <h2>{{storedValue()}}</h2>
+            <button type="button" class="btn btn-primary" ng-click="tryNodeLocalStorage()">Try Node LocalStorage
+            </button>
+        </tab>
     </tabset>
 </div>

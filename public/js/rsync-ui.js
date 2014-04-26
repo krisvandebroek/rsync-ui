@@ -62,7 +62,8 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
 
         $scope.spawnRsyncCommand = function () {
             $scope.rsyncOutput = '';
-            var spawnedLs = require('child_process').spawn('ls', ['-R', '/usr']);
+//            var spawnedLs = require('child_process').spawn('ls', ['-R', '/usr']);
+            var spawnedLs = require('child_process').spawn('ls', ['-R /usr']);
             spawnedLs.stdout.on('data', function (data) {
                 $scope.rsyncOutput += data;
                 // TODO Find out correct way to do this. I should pass the function to the $apply method.
