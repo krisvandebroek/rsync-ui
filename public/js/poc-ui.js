@@ -32,4 +32,20 @@ angular.module('poc-ui', ['ui.router'])
             localStorage = new LocalStorage('/tmp/scratch')
             return localStorage.getItem('myFirstKey');
         };
+
+        $scope.tryJsonFileStorage = function () {
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+            var d = {
+                foo: "bar"
+            };
+
+            db.saveSync("myKey", d);
+        }
+
+        $scope.storedJfsValue = function () {
+            var Store = require('jfs');
+            var db = new Store('/tmp/scratch');
+            return db.getSync("myKey").foo;
+        }
     }]);
