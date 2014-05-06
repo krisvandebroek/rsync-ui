@@ -59,6 +59,14 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
         }
 
         $scope.rsyncParams = new RsyncConfig();
+        $scope.rsyncConfigName = '';
+
+        $scope.saveRsyncConfig = function () {
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+
+            db.saveSync($scope.rsyncConfigName, $scope.rsyncParams);
+        }
 
         $scope.spawnRsyncCommand = function () {
             $scope.rsyncOutput = '';
