@@ -58,14 +58,28 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
             }
         }
 
-        $scope.rsyncParams = new RsyncConfig();
+        $scope.rsyncConfig = new RsyncConfig();
         $scope.rsyncConfigName = '';
 
         $scope.saveRsyncConfig = function () {
             var Store = require("jfs");
             var db = new Store("/tmp/scratch");
 
-            db.saveSync($scope.rsyncConfigName, $scope.rsyncParams);
+            db.saveSync($scope.rsyncConfigName, $scope.rsyncConfig);
+
+            var index = $scope.savedRsyncConfigs();
+            index.files.push($scope.rsyncConfigName);
+            db.saveSync('index', index);
+        }
+
+        $scope.savedRsyncConfigs = function () {
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+
+            index = db.allSync().index;
+            if (index === undefined) index = {files: [] };
+
+            return index;
         }
 
         $scope.spawnRsyncCommand = function () {
