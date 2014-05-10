@@ -12,21 +12,18 @@
                     </button>
 
                     <div class="col-sm-9">
-                    <input id="rsyncConfigName" class="form-control" type="text" ng-model="rsyncConfigName"/>
+                        <input id="rsyncConfigName" class="form-control" type="text" ng-model="rsyncConfigName"/>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <button type="submit" class="col-sm-3 btn btn-primary" ng-click="">Load:
+                    <button type="submit" class="col-sm-3 btn btn-primary" ng-click="loadSavedRsyncConfig()">Load:
                     </button>
 
                     <div class="col-sm-9">
-                        <select id="savedRsyncConfigNames" class="form-control">
-                            <option ng-repeat="savedRsyncConfigName in savedRsyncConfigs().files">
-                                {{savedRsyncConfigName}}
-                            </option>
-                        </select>
+                        <select id="savedRsyncConfigNames" class="form-control" ng-model="savedRsyncConfigNameToLoad"
+                                ng-options="savedRsyncConfigName as savedRsyncConfigName for savedRsyncConfigName in savedRsyncConfigs().files"/>
                     </div>
                 </div>
             </div>

@@ -82,6 +82,14 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
             return index;
         }
 
+        $scope.loadSavedRsyncConfig = function () {
+            $scope.savedRsyncConfigNameToLoad;
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+
+            $scope.rsyncConfig = db.getSync($scope.savedRsyncConfigNameToLoad);
+        }
+
         $scope.spawnRsyncCommand = function () {
             $scope.rsyncOutput = '';
 //            var spawnedLs = require('child_process').spawn('ls', ['-R', '/usr']);
