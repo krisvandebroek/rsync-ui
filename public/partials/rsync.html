@@ -12,7 +12,7 @@
                     </button>
 
                     <div class="col-sm-9">
-                        <input id="rsyncConfigName" class="form-control" type="text" ng-model="rsyncConfigName"/>
+                        <input id="rsyncConfigName" class="form-control" type="text" ng-model="rsyncConfig.name"/>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
 
                     <div class="col-sm-9">
                         <select id="savedRsyncConfigNames" class="form-control" ng-model="savedRsyncConfigNameToLoad"
-                                ng-options="savedRsyncConfigName as savedRsyncConfigName for savedRsyncConfigName in savedRsyncConfigs().files"/>
+                                ng-options="savedRsyncConfigName as savedRsyncConfigName for savedRsyncConfigName in savedRsyncConfigs().files"></select>
                     </div>
                 </div>
             </div>
