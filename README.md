@@ -20,6 +20,6 @@ Feel free to check it out, give feedback or even contribute so that it will also
 2. In the directory `./public` execute:
    1. `bower install` to download the bower dependencies
 3. In the directory `./` execute: 
-   4. `npm install` to download the node dependencies
-   5. `grunt` to build the mac version of the application
-   6. `open ./build/releases/rsync-ui/mac/rsync-ui.app` to launch the application or double-click on the application in the Finder.
+   1. `npm install` to download the node dependencies
+   2. `grunt` to build the mac version of the application
+   3. `open ./build/releases/rsync-ui/mac/rsync-ui.app` to launch the application or double-click on the application in the Finder.
