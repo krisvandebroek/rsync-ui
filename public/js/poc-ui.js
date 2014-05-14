@@ -16,4 +16,36 @@ angular.module('poc-ui', ['ui.router'])
         console.log('Next: Reading file');
         // Test reading the contents of a file on the filesystem
         $scope.fileContents = fs.readFileSync('/etc/bashrc').toString('utf8');
+
+        $scope.tryNodeLocalStorage = function () {
+
+            var LocalStorage = require('node-localstorage').LocalStorage;
+            localStorage = new LocalStorage('/tmp/scratch')
+
+            console.log('Read before write: ' + localStorage.getItem('myFirstKey'));
+            localStorage.setItem('myFirstKey', 'myFirstValue');
+            console.log('Read after write: ' + localStorage.getItem('myFirstKey'));
+        };
+
+        $scope.storedValue = function () {
+            var LocalStorage = require('node-localstorage').LocalStorage;
+            localStorage = new LocalStorage('/tmp/scratch')
+            return localStorage.getItem('myFirstKey');
+        };
+
+        $scope.tryJsonFileStorage = function () {
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+            var d = {
+                foo: "bar"
+            };
+
+            db.saveSync("myKey", d);
+        }
+
+        $scope.storedJfsValue = function () {
+            var Store = require('jfs');
+            var db = new Store('/tmp/scratch');
+            return db.getSync("myKey").foo;
+        }
     }]);

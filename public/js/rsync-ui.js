@@ -8,23 +8,64 @@ var rsync_ui_app_dependencies = [
 
 angular.module('rsync-ui-app', rsync_ui_app_dependencies)
     .controller('RsyncCommandController', ['$scope', function ($scope) {
-        rsyncParams = {};
 
-        // Testing with some parameters from the rsync(1) command
-        rsyncParams.dryRun = true;
-        rsyncParams.delete = true;
-        rsyncParams.deleteAfter = true;
-        rsyncParams.filterFile = '/opt/testfilter.txt';
-        rsyncParams.archive = true;
-        rsyncParams.oneFileSystem = true;
-        rsyncParams.logFile = '/opt/testlogfile.txt';
-        rsyncParams.itemizeChanges = true;
-        rsyncParams.verbose = true;
-        rsyncParams.humanReadable = true;
-        rsyncParams.progress = true;
-        rsyncParams.stats = true;
+        $scope.rsyncConfig = new RsyncConfig();
+        $scope.savedRsyncConfigNameToLoad = '';
 
-        $scope.rsyncParams = rsyncParams;
+        $scope.saveRsyncConfig = function () {
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+
+            db.saveSync($scope.rsyncConfig.name, $scope.rsyncConfig);
+
+            var index = $scope.savedRsyncConfigs();
+            if (index.files.indexOf($scope.rsyncConfig.name) == -1) {
+                index.files.push($scope.rsyncConfig.name);
+                db.saveSync('index', index);
+            }
+        };
+
+        $scope.savedRsyncConfigs = function () {
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+
+            var listing = db.allSync();
+            index = listing.index;
+            if (index === undefined) index = {files: [] };
+
+            index.files.forEach(function (file) {
+                if (listing[file] === undefined) {
+                    index.files.pop(file);
+                }
+            });
+
+            return index;
+        };
+
+        $scope.loadSavedRsyncConfig = function () {
+            var Store = require("jfs");
+            var db = new Store("/tmp/scratch");
+
+            $scope.rsyncConfig = db.getSync($scope.savedRsyncConfigNameToLoad);
+            $scope.rsyncConfig.__proto__ = RsyncConfig.prototype;
+        };
+
+        $scope.spawnRsyncCommand = function () {
+            $scope.rsyncOutput = '';
+            var command = $scope.rsyncConfig.generateRsyncCommand();
+            var spawnedCommand = require('child_process').spawn(command.command, command.options);
+            spawnedCommand.stdout.on('data', function (data) {
+                $scope.rsyncOutput += data;
+                // TODO Find out correct way to do this. I should pass the function to the $apply method.
+                $scope.$apply();
+            });
+            spawnedCommand.stderr.on('data', function (data) {
+                console.log('stderr: ' + data);
+            });
+            spawnedCommand.on('close', function (code) {
+                console.log('ended with code: ' + code);
+            });
+        };
     }])
     .config(function ($stateProvider, $urlRouterProvider) {
         // For any unmatched url, redirect to /state1
@@ -37,16 +78,3 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
                 controller: 'RsyncCommandController'
             });
     });
-
-// dry-run
-// delete
-// delete-after
-// filter-file
-// archive
-// one-file-system
-// log-file
-// itemize-changes
-// verbose
-// human-readable
-// progress
-// stats

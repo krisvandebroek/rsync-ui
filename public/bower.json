@@ -1,0 +1,14 @@
+{
+    "name": "rsync-ui",
+    "version": "1.0.0",
+    "dependencies": {
+        "angular-bootstrap": "0.10.0",
+        "angular-ui-router": "0.2.10",
+        "bootstrap": "3.1.1"
+    },
+    "private": true,
+    "license": "../LICENSE.md",
+    "authors": [
+        "Kris Vandebroek"
+    ]
+}

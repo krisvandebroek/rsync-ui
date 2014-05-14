@@ -1,5 +1,168 @@
 <div id="rsync-command-ui">
     <h1>rsync</h1>
 
-    <p>{{ rsyncParams.dryRun }}</p>
+    <form class="form-horizontal container-fluid" role="form">
+        <div class="row">
+            <div class="col-sm-4">
+                <blockquote id="version-disclaimer">rsync version 2.6.9 protocol version 29</blockquote>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <button type="submit" class="col-sm-3 btn btn-primary" ng-click="saveRsyncConfig()">Save as:
+                    </button>
+
+                    <div class="col-sm-9">
+                        <input id="rsyncConfigName" class="form-control" type="text" ng-model="rsyncConfig.name"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <button type="submit" class="col-sm-3 btn btn-primary" ng-click="loadSavedRsyncConfig()">Load:
+                    </button>
+
+                    <div class="col-sm-9">
+                        <select id="savedRsyncConfigNames" class="form-control" ng-model="savedRsyncConfigNameToLoad"
+                                ng-options="savedRsyncConfigName as savedRsyncConfigName for savedRsyncConfigName in savedRsyncConfigs().files"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="short-command" class="col-sm-5 control-label">Short command</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="short-command" type="checkbox" ng-model="rsyncConfig.shortCommand"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="delete" class="col-sm-5 control-label">Delete</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="delete" type="checkbox" ng-model="rsyncConfig.delete"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="delete-after" class="col-sm-5 control-label">delete-after</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="delete-after" type="checkbox" ng-model="rsyncConfig.deleteAfter"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dry-run" class="col-sm-5 control-label">dry-run</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="dry-run" type="checkbox" ng-model="rsyncConfig.dryRun"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="archive" class="col-sm-5 control-label">archive</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="archive" type="checkbox" ng-model="rsyncConfig.archive"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="one-file-system" class="col-sm-5 control-label">one-file-system</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="one-file-system" type="checkbox" ng-model="rsyncConfig.oneFileSystem"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="verbose" class="col-sm-5 control-label">verbose</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="verbose" type="checkbox" ng-model="rsyncConfig.verbose"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="human-readable" class="col-sm-5 control-label">human-readable</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="human-readable" type="checkbox" ng-model="rsyncConfig.humanReadable"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="progress" class="col-sm-5 control-label">progress</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="progress" type="checkbox" ng-model="rsyncConfig.progress"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="log-file" class="col-sm-5 control-label">log-file</label>
+
+                    <div class="col-sm-7">
+                        <input id="log-file" class="form-control" type="text" ng-model="rsyncConfig.logFile"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="filter-file" class="col-sm-5 control-label">filter-file</label>
+
+                    <div class="col-sm-7">
+                        <input id="filter-file" class="form-control" type="text" ng-model="rsyncConfig.filterFile"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="rsync-src" class="col-sm-5 control-label">Rsync Source</label>
+
+                    <div class="col-sm-7">
+                        <input id="rsync-src" class="form-control" type="text" ng-model="rsyncConfig.src"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="rsync-dest" class="col-sm-5 control-label">Rsync Destination</label>
+
+                    <div class="col-sm-7">
+                        <input id="rsync-dest" class="form-control" type="text" ng-model="rsyncConfig.dest"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="itemize-changes" class="col-sm-5 control-label">itemize-changes</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="itemize-changes" type="checkbox" ng-model="rsyncConfig.itemizeChanges"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="stats" class="col-sm-5 control-label">stats</label>
+
+                    <div class="col-sm-7 checkbox">
+                        <input id="stats" type="checkbox" ng-model="rsyncConfig.stats"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="rsync-command">Rsync command</label>
+                    <textarea id="rsync-command" class="form-control"
+                              rows="5">{{rsyncConfig.generateRsyncCommand().asString()}}</textarea>
+                </div>
+
+                <button type="button" class="btn btn-primary" ng-click="spawnRsyncCommand()">Execute rsync command
+                </button>
+
+                <div class="form-group">
+                    <label for="rsync-output">Rsync output</label>
+                    <textarea id="rsync-output" class="form-control" rows="80">{{rsyncOutput}}</textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+
 </div>
