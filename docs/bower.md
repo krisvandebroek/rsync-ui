@@ -4,6 +4,7 @@ Bower is used to manage our javascript frontend dependencies.
 They are listed in the `public\bower.json` file.
 
 Dependencies:
+
 | Dependency        | Description                          |
 | ------------------| ------------------------------------ |
 | bootstrap         | Bootstrap                            |

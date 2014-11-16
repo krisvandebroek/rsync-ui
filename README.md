@@ -31,3 +31,6 @@ Feel free to check it out, give feedback or even contribute so that it will also
 * [grunt](docs/grunt.md)
 * [npm](docs/npm.md)
 * [nvm](docs/nvm.md)
+
+## References
+* Icon: http://www.iconarchive.com/show/fs-icons-by-franksouza183/Places-folder-backup-icon.html
