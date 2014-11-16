@@ -1,0 +1,1 @@
+1. `package.json`: Do we need both node-localstorage and jfs?

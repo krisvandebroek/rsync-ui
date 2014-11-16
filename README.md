@@ -17,9 +17,17 @@ Feel free to check it out, give feedback or even contribute so that it will also
 ## Installation steps
 
 1. Checkout the code
-2. In the directory `./public` execute:
-   1. `bower install` to download the bower dependencies
-3. In the directory `./` execute: 
-   1. `npm install` to download the node dependencies
-   2. `grunt` to build the mac version of the application
-   3. `open ./build/releases/rsync-ui/mac/rsync-ui.app` to launch the application or double-click on the application in the Finder.
+2. Make sure that you have installed nodejs (http://nodejs.org/). See also [nvm](docs/nvm.md)
+3. Make sure that you have installed bower globally: `npm install -g bower`. If you do not have enough permissions, execute: `sudo npm install -g bower`.
+4. Make sure that you have installed the grunt commandline interface: `npm install -g grunt-cli`. If you do not have enough permissions, execute: `sudo npm install -g grunt-cli`.
+5. In the directory `./`, execute `npm install` to download all needed npm dependencies.
+6. In the directory `./public` execute `bower install` to download the bower dependencies
+7. In the directory `./` execute:
+   1. `grunt` to build the mac version of the application
+   2. `open ./build/rsync-ui/osx/rsync-ui.app` to launch the application or double-click on the application in the Finder.
+
+## Extra information
+* [bower](docs/bower.md)
+* [grunt](docs/grunt.md)
+* [npm](docs/npm.md)
+* [nvm](docs/nvm.md)

@@ -4,8 +4,12 @@
 # Ignore nodejs generated files
 node_modules
 
-# Ignore grunt build files
+# Ignore build and cache folder used when building the webkit app
 /build
+/cache
 
 # Bower downloaded files
 /public/bower_components
+
+# npm debug output
+npm-debug.log
