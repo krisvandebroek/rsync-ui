@@ -4,6 +4,7 @@ The package.json file describes the npm dependencies needed for this project.
 Executing `npm install` will download the necessary dependencies into the `node_modules` directory.
 
 Dependencies:
+
 | Dependency                | Description                                      |
 | ------------------------- | ------------------------------------------------ |
 | grunt                     | JavaScript task runner used to build the project |
