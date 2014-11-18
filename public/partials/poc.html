@@ -37,5 +37,20 @@
             <button type="button" class="btn btn-primary" ng-click="tryJsonFileStorage()">Try Json File Storage
             </button>
         </tab>
+        <tab heading="q-io">
+            <h1>Reading files in a directory</h1>
+            <ul>
+                <li ng-repeat="qfilename in qfilenames">{{qfilename}}</li>
+            </ul>
+
+            <!-- Test reading the contents of a file -->
+            <code>File Contents: {{qfileContents}}</code>
+            <br/>
+
+            <div>File Contents: {{qfilenames}} - {{qsomevar}} - {{qfileContents}}</div>
+        </tab>
+        <tab heading="NeDB storage">
+            <h2>{{nedbStoredValue}}</h2>
+        </tab>
     </tabset>
 </div>

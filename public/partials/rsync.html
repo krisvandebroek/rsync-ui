@@ -151,7 +151,7 @@
                 <div class="form-group">
                     <label for="rsync-command">Rsync command</label>
                     <textarea id="rsync-command" class="form-control"
-                              rows="5">{{rsyncConfig.generateRsyncCommand().asString()}}</textarea>
+                              rows="5">{{createTerminalCommand(rsyncConfig).asString()}}</textarea>
                 </div>
 
                 <button type="button" class="btn btn-primary" ng-click="spawnRsyncCommand()">Execute rsync command

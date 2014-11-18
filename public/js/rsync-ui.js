@@ -7,52 +7,69 @@ var rsync_ui_app_dependencies = [
 ];
 
 angular.module('rsync-ui-app', rsync_ui_app_dependencies)
+    .config(function ($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise("/rsync");
+
+        $stateProvider
+            .state('rsync', {
+                url: "/rsync",
+                templateUrl: "partials/rsync.html",
+                controller: 'RsyncCommandController'
+            });
+    })
     .controller('RsyncCommandController', ['$scope', function ($scope) {
 
         $scope.rsyncConfig = new RsyncConfig();
         $scope.savedRsyncConfigNameToLoad = '';
 
+        $scope.createTerminalCommand = createTerminalCommand;
+
         $scope.saveRsyncConfig = function () {
-            var Store = require("jfs");
-            var db = new Store("/tmp/scratch");
-
-            db.saveSync($scope.rsyncConfig.name, $scope.rsyncConfig);
-
-            var index = $scope.savedRsyncConfigs();
-            if (index.files.indexOf($scope.rsyncConfig.name) == -1) {
-                index.files.push($scope.rsyncConfig.name);
-                db.saveSync('index', index);
-            }
+            rsyncRepository.save($scope.rsyncConfig);
+            //var Store = require("jfs");
+            //var db = new Store("/tmp/scratch");
+            //
+            //db.saveSync($scope.rsyncConfig.rsyncConfigName, $scope.rsyncConfig);
+            //
+            //var index = $scope.savedRsyncConfigs();
+            //if (index.files.indexOf($scope.rsyncConfig.rsyncConfigName) == -1) {
+            //    index.files.push($scope.rsyncConfig.rsyncConfigName);
+            //    db.saveSync('index', index);
+            //}
         };
 
         $scope.savedRsyncConfigs = function () {
-            var Store = require("jfs");
-            var db = new Store("/tmp/scratch");
-
-            var listing = db.allSync();
-            index = listing.index;
-            if (index === undefined) index = {files: [] };
-
-            index.files.forEach(function (file) {
-                if (listing[file] === undefined) {
-                    index.files.pop(file);
-                }
-            });
-
-            return index;
+            var rsyncConfigs = rsyncRepository.findAll();
+            return {files: rsyncConfigs};
+            //var Store = require("jfs");
+            //var db = new Store("/tmp/scratch");
+            //
+            //var listing = db.allSync();
+            //index = listing.index;
+            //if (index === undefined) index = {files: [] };
+            //
+            //index.files.forEach(function (file) {
+            //    if (listing[file] === undefined) {
+            //        index.files.pop(file);
+            //    }
+            //});
+            //
+            //return index;
         };
 
         $scope.loadSavedRsyncConfig = function () {
-            var Store = require("jfs");
-            var db = new Store("/tmp/scratch");
+            $scope.rsyncConfig = rsyncRepository.getByRsyncConfigName($scope.savedRsyncConfigNameToLoad);
+            //$scope.rsyncConfig.__proto__ = RsyncConfig.prototype;
 
-            $scope.rsyncConfig = db.getSync($scope.savedRsyncConfigNameToLoad);
-            $scope.rsyncConfig.__proto__ = RsyncConfig.prototype;
+            //var Store = require("jfs");
+            //var db = new Store("/tmp/scratch");
+            //$scope.rsyncConfig = db.getSync($scope.savedRsyncConfigNameToLoad);
+            //$scope.rsyncConfig.__proto__ = RsyncConfig.prototype;
         };
 
         $scope.spawnRsyncCommand = function () {
             $scope.rsyncOutput = '';
-            var command = $scope.rsyncConfig.generateRsyncCommand();
+            var command = createTerminalCommand($scope.rsyncConfig);
             var spawnedCommand = require('child_process').spawn(command.command, command.options);
             spawnedCommand.stdout.on('data', function (data) {
                 $scope.rsyncOutput += data;
@@ -66,15 +83,4 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
                 console.log('ended with code: ' + code);
             });
         };
-    }])
-    .config(function ($stateProvider, $urlRouterProvider) {
-        // For any unmatched url, redirect to /state1
-        $urlRouterProvider.otherwise("/rsync");
-
-        $stateProvider
-            .state('rsync', {
-                url: "/rsync",
-                templateUrl: "partials/rsync.html",
-                controller: 'RsyncCommandController'
-            });
-    });
+    }]);
