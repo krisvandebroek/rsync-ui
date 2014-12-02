@@ -2,7 +2,7 @@
 *.iml
 
 # Ignore nodejs generated files
-node_modules
+/node_modules
 
 # Ignore build and cache folder used when building the webkit app
 /build
