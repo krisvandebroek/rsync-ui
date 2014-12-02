@@ -1,3 +1,5 @@
+"use strict";
+
 var fs = require('fs');
 var FS = require('q-io/fs');
 
@@ -21,7 +23,7 @@ angular.module('poc-ui', ['ui.router'])
         $scope.tryNodeLocalStorage = function () {
 
             var LocalStorage = require('node-localstorage').LocalStorage;
-            localStorage = new LocalStorage('/tmp/scratch');
+            var localStorage = new LocalStorage('/tmp/scratch');
 
             console.log('Read before write: ' + localStorage.getItem('myFirstKey'));
             localStorage.setItem('myFirstKey', 'myFirstValue');
@@ -30,7 +32,7 @@ angular.module('poc-ui', ['ui.router'])
 
         $scope.storedValue = function () {
             var LocalStorage = require('node-localstorage').LocalStorage;
-            localStorage = new LocalStorage('/tmp/scratch');
+            var localStorage = new LocalStorage('/tmp/scratch');
             return localStorage.getItem('myFirstKey');
         };
 

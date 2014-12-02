@@ -8,7 +8,8 @@ module.exports = function (grunt) {
                 macIcns: './public/images/backup.icns',
                 macZip: false, // Better performance on Mac
                 winIco: './public/images/backup.ico',
-                platforms: ['osx'] // Possible values: win,osx,linux32,linux64
+                platforms: ['osx'], // Possible values: win,osx,linux32,linux64
+                version: '0.11.0' // By specifying the version, you can work offline
             },
             src: './public/**/*' // Your node-webkit app
         }

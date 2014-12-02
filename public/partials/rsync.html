@@ -6,13 +6,25 @@
             <div class="col-sm-4">
                 <blockquote id="version-disclaimer">rsync version 2.6.9 protocol version 29</blockquote>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <p ng-show="rsyncConfig._id !== undefined">
+                    Editing {{rsyncConfig._id}}
+                    <span ng-show="rsyncConfig.rsyncConfigName !== rsyncConfigOriginalName"> - Original name: {{rsyncConfigOriginalName}}</span>
+                </p>
+
+                <p ng-show="rsyncConfig._id === undefined">Not Editing {{rsyncConfig._id}}</p>
+            </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <button type="submit" class="col-sm-3 btn btn-primary" ng-click="saveRsyncConfig()">Save as:
+                    <button type="submit" class="col-sm-2 btn btn-primary" ng-click="createNew()">New</button>
+                    <button type="submit" class="col-sm-2 btn btn-primary" ng-click="saveRsyncConfig()">Save as:
                     </button>
 
-                    <div class="col-sm-9">
-                        <input id="rsyncConfigName" class="form-control" type="text" ng-model="rsyncConfig.name"/>
+                    <div class="col-sm-8">
+                        <input id="rsyncConfigName" class="form-control" type="text"
+                               ng-model="rsyncConfig.rsyncConfigName"/>
                     </div>
                 </div>
             </div>
@@ -23,7 +35,7 @@
 
                     <div class="col-sm-9">
                         <select id="savedRsyncConfigNames" class="form-control" ng-model="savedRsyncConfigNameToLoad"
-                                ng-options="savedRsyncConfigName as savedRsyncConfigName for savedRsyncConfigName in savedRsyncConfigs().files"></select>
+                                ng-options="savedRsyncConfig.rsyncConfigName as savedRsyncConfig.rsyncConfigName for savedRsyncConfig in savedRsyncConfigs"></select>
                     </div>
                 </div>
             </div>

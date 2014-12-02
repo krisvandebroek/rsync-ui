@@ -1,4 +1,6 @@
-function RsyncConfig() {
+"use strict";
+
+var RsyncConfig = function RsyncConfig() {
     this.rsyncConfigName = '';
 
     this.shortCommand = true;
@@ -18,4 +20,6 @@ function RsyncConfig() {
 
     this.src = '/tmp/rsync-test/src';
     this.dest = '/tmp/rsync-test/dest';
-}
+};
+
+module.exports = RsyncConfig;

@@ -1,3 +1,5 @@
+"use strict";
+
 function createTerminalCommand(rsyncConfig) {
     var command = 'rsync';
     var options = [];

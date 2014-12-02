@@ -1,4 +1,14 @@
-//var fs = require('fs');
+"use strict";
+
+var config = require('rsync/config/config');
+var dataPath = require('nw.gui').App.dataPath;
+var abc = require('rsync/def/abc.js');
+
+config.dbBasePath = dataPath;
+
+var RsyncConfig = require('rsync/rsync-command/rsync-config');
+var rsyncCommandFactory = require('rsync/rsync-command/rsync-command-factory');
+var rsyncRepository = require('rsync/rsync-command/rsync-repository');
 
 var rsync_ui_app_dependencies = [
     'ui.router',
@@ -19,52 +29,53 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
     })
     .controller('RsyncCommandController', ['$scope', function ($scope) {
 
+        // Todo: put controller on scope.
         $scope.rsyncConfig = new RsyncConfig();
         $scope.savedRsyncConfigNameToLoad = '';
 
-        $scope.createTerminalCommand = createTerminalCommand;
+        $scope.createTerminalCommand = rsyncCommandFactory.createTerminalCommand;
+
+        $scope.savedRsyncConfigs = undefined;
+        $scope.rsyncConfigOriginalName = undefined;
+        loadSavedRsyncConfigs();
 
         $scope.saveRsyncConfig = function () {
-            rsyncRepository.save($scope.rsyncConfig);
-            //var Store = require("jfs");
-            //var db = new Store("/tmp/scratch");
-            //
-            //db.saveSync($scope.rsyncConfig.rsyncConfigName, $scope.rsyncConfig);
-            //
-            //var index = $scope.savedRsyncConfigs();
-            //if (index.files.indexOf($scope.rsyncConfig.rsyncConfigName) == -1) {
-            //    index.files.push($scope.rsyncConfig.rsyncConfigName);
-            //    db.saveSync('index', index);
-            //}
+            rsyncRepository.save($scope.rsyncConfig, function (error, savedRsyncConfig) {
+                if (error) {
+                    console.error('Saving failed: ' + error);
+                } else {
+                    loadSavedRsyncConfigs();
+                    $scope.$apply(function () {
+                        $scope.rsyncConfig = savedRsyncConfig;
+                        $scope.rsyncConfigOriginalName = savedRsyncConfig.rsyncConfigName;
+                    })
+                }
+            });
         };
 
-        $scope.savedRsyncConfigs = function () {
-            var rsyncConfigs = rsyncRepository.findAll();
-            return {files: rsyncConfigs};
-            //var Store = require("jfs");
-            //var db = new Store("/tmp/scratch");
-            //
-            //var listing = db.allSync();
-            //index = listing.index;
-            //if (index === undefined) index = {files: [] };
-            //
-            //index.files.forEach(function (file) {
-            //    if (listing[file] === undefined) {
-            //        index.files.pop(file);
-            //    }
-            //});
-            //
-            //return index;
-        };
+        function loadSavedRsyncConfigs() {
+            rsyncRepository.findAll(function (error, rsyncConfigs) {
+                if (error) {
+                    console.error('Loading failed: ' + error);
+                } else {
+                    $scope.$apply(function () {
+                        $scope.savedRsyncConfigs = rsyncConfigs;
+                    });
+                }
+            })
+        }
 
         $scope.loadSavedRsyncConfig = function () {
-            $scope.rsyncConfig = rsyncRepository.getByRsyncConfigName($scope.savedRsyncConfigNameToLoad);
-            //$scope.rsyncConfig.__proto__ = RsyncConfig.prototype;
-
-            //var Store = require("jfs");
-            //var db = new Store("/tmp/scratch");
-            //$scope.rsyncConfig = db.getSync($scope.savedRsyncConfigNameToLoad);
-            //$scope.rsyncConfig.__proto__ = RsyncConfig.prototype;
+            rsyncRepository.getByRsyncConfigName($scope.savedRsyncConfigNameToLoad, function (error, loadedSavedRsyncConfig) {
+                if (error) {
+                    console.error('Load config failed: ' + error);
+                } else {
+                    $scope.$apply(function () {
+                        $scope.rsyncConfig = loadedSavedRsyncConfig;
+                        $scope.rsyncConfigOriginalName = loadedSavedRsyncConfig.rsyncConfigName;
+                    });
+                }
+            });
         };
 
         $scope.spawnRsyncCommand = function () {
@@ -72,9 +83,9 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
             var command = createTerminalCommand($scope.rsyncConfig);
             var spawnedCommand = require('child_process').spawn(command.command, command.options);
             spawnedCommand.stdout.on('data', function (data) {
-                $scope.rsyncOutput += data;
-                // TODO Find out correct way to do this. I should pass the function to the $apply method.
-                $scope.$apply();
+                $scope.$apply(function () {
+                    $scope.rsyncOutput += data;
+                });
             });
             spawnedCommand.stderr.on('data', function (data) {
                 console.log('stderr: ' + data);
@@ -83,4 +94,9 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
                 console.log('ended with code: ' + code);
             });
         };
+
+        $scope.createNew = function () {
+            $scope.savedRsyncConfigNameToLoad = undefined;
+            $scope.rsyncConfig = new RsyncConfig();
+        }
     }]);

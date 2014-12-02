@@ -1,3 +1,5 @@
+"use strict";
+
 function TerminalCommand(command, options) {
     this.command = command;
     this.options = options;
