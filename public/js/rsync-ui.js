@@ -2,7 +2,6 @@
 
 var config = require('rsync/config/config');
 var dataPath = require('nw.gui').App.dataPath;
-var abc = require('rsync/def/abc.js');
 
 config.dbBasePath = dataPath;
 
