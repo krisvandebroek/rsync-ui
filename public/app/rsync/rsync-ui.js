@@ -22,7 +22,7 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
         $stateProvider
             .state('rsync', {
                 url: "/rsync",
-                templateUrl: "partials/rsync.html",
+                templateUrl: "app/rsync/rsync.html",
                 controller: 'RsyncCommandController'
             });
     })
@@ -79,7 +79,7 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
 
         $scope.spawnRsyncCommand = function () {
             $scope.rsyncOutput = '';
-            var command = createTerminalCommand($scope.rsyncConfig);
+            var command = rsyncCommandFactory.createTerminalCommand($scope.rsyncConfig);
             var spawnedCommand = require('child_process').spawn(command.command, command.options);
             spawnedCommand.stdout.on('data', function (data) {
                 $scope.$apply(function () {

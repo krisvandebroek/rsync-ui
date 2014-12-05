@@ -8,7 +8,7 @@ angular.module('poc-ui', ['ui.router'])
         $stateProvider
             .state('poc', {
                 url: "/poc",
-                templateUrl: "partials/poc.html",
+                templateUrl: "app/poc/poc.html",
                 controller: 'poc-controller'
             });
     })
