@@ -1,0 +1,9 @@
+<div id="rsync-detail">
+    <div id="error">{{detail.error}}</div>
+    <div ng-hide="detail.rsyncConfig">
+        <p>Loading...</p>
+    </div>
+    <div ng-show="detail.rsyncConfig">
+        <h1>{{detail.rsyncConfig.rsyncConfigName}}</h1>
+    </div>
+</div>

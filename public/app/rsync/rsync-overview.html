@@ -1,0 +1,31 @@
+<div id="rsync-overview">
+    <form class="form-horizontal container-fluid" role="form">
+        <a ui-sref="rsync-overview">&lt; Overview</a>
+
+        <table>
+            <thead>
+            <tr>
+                <td>Config name</td>
+                <td>Actions</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="rsyncConfig in overview.rsyncConfigs">
+                <td><a ui-sref="rsync-detail({id: rsyncConfig._id})">{{rsyncConfig.rsyncConfigName}}</a></td>
+                <td>
+                    <div class="form-group">
+                        <button type="submit" class="col-sm-2 btn btn-primary" ng-click="overview.delete(rsyncConfig)">
+                            Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <ul>
+            <li>
+                <a ui-sref="rsync-detail({id: rsyncConfig._id})"></a>
+            </li>
+        </ul>
+    </form>
+</div>

@@ -19,7 +19,7 @@ beforeEach(function clearDatabase(done) {
     });
 });
 
-describe.only('RsyncRepository', function () {
+describe('RsyncRepository', function () {
     describe('#save(rsyncConfig, callback)', function () {
         it('can store a rsync config in the repository (without async)', function (done) {
             var rsyncConfig = new RsyncConfig();
@@ -273,6 +273,48 @@ describe.only('RsyncRepository', function () {
             })
         });
     });
+
+    describe('#getById(id)', function () {
+        it('returns the rsync config with the given id', function (done) {
+            var rsyncConfig = aRsyncConfig().rsyncConfigName("dummyConfig").build();
+            async.series([
+                function (callback) {
+                    rsyncRepository.save(rsyncConfig, verifyAsync(callback, function (error, persistedRsyncConfig) {
+                        expect(error).to.not.exist();
+                        expect(persistedRsyncConfig).to.exist();
+                        expect(persistedRsyncConfig._id).to.exist();
+                        rsyncConfig = persistedRsyncConfig;
+                    }))
+                },
+                function (callback) {
+                    rsyncRepository.getById(rsyncConfig._id, verifyAsync(callback, function (error, loadedRsyncConfig) {
+                        expect(error).to.not.exist();
+                        expect(loadedRsyncConfig).to.exist();
+                        expect(loadedRsyncConfig._id).to.equal(rsyncConfig._id);
+                    }));
+                }
+            ], function (error) {
+                done(error);
+            })
+        })
+        it('returns null if there is no matching item found', function (done) {
+            rsyncRepository.getById('1234567890', verifyAsync(done, function (error, loadedRsyncConfig) {
+                expect(error).to.not.exist();
+                expect(loadedRsyncConfig).to.not.exist();
+            }));
+        })
+    });
+
+    function verifyAsync(doneCallback, callback) {
+        return function () {
+            try {
+                callback.apply(this, arguments);
+                doneCallback();
+            } catch (error) {
+                doneCallback(error);
+            }
+        }
+    }
 
     function aRsyncConfig() {
         var rsyncConfig = new RsyncConfig();

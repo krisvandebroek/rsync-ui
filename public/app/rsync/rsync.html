@@ -9,33 +9,35 @@
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <p ng-show="rsyncConfig._id !== undefined">
-                    Editing {{rsyncConfig._id}}
-                    <span ng-show="rsyncConfig.rsyncConfigName !== rsyncConfigOriginalName"> - Original name: {{rsyncConfigOriginalName}}</span>
+                <p ng-show="detail.rsyncConfig._id !== undefined">
+                    Editing {{detail.rsyncConfig._id}}
+                    <span ng-show="detail.rsyncConfig.rsyncConfigName !== detail.rsyncConfigOriginalName"> - Original name: {{detail.rsyncConfigOriginalName}}</span>
                 </p>
 
-                <p ng-show="rsyncConfig._id === undefined">Not Editing {{rsyncConfig._id}}</p>
+                <p ng-show="detail.rsyncConfig._id === undefined">Not Editing {{detail.rsyncConfig._id}}</p>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <button type="submit" class="col-sm-2 btn btn-primary" ng-click="createNew()">New</button>
-                    <button type="submit" class="col-sm-2 btn btn-primary" ng-click="saveRsyncConfig()">Save as:
+                    <button type="submit" class="col-sm-2 btn btn-primary" ng-click="detail.createNew()">New</button>
+                    <button type="submit" class="col-sm-2 btn btn-primary" ng-click="detail.saveRsyncConfig()">Save as:
                     </button>
 
                     <div class="col-sm-8">
                         <input id="rsyncConfigName" class="form-control" type="text"
-                               ng-model="rsyncConfig.rsyncConfigName"/>
+                               ng-model="detail.rsyncConfig.rsyncConfigName"/>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <button type="submit" class="col-sm-3 btn btn-primary" ng-click="loadSavedRsyncConfig()">Load:
+                    <button type="submit" class="col-sm-3 btn btn-primary" ng-click="detail.loadSavedRsyncConfig()">
+                        Load:
                     </button>
 
                     <div class="col-sm-9">
-                        <select id="savedRsyncConfigNames" class="form-control" ng-model="savedRsyncConfigNameToLoad"
-                                ng-options="savedRsyncConfig.rsyncConfigName as savedRsyncConfig.rsyncConfigName for savedRsyncConfig in savedRsyncConfigs"></select>
+                        <select id="savedRsyncConfigNames" class="form-control"
+                                ng-model="detail.savedRsyncConfigNameToLoad"
+                                ng-options="savedRsyncConfig.rsyncConfigName as savedRsyncConfig.rsyncConfigName for savedRsyncConfig in detail.savedRsyncConfigs"></select>
                     </div>
                 </div>
             </div>
@@ -46,7 +48,7 @@
                     <label for="short-command" class="col-sm-5 control-label">Short command</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="short-command" type="checkbox" ng-model="rsyncConfig.shortCommand"/>
+                        <input id="short-command" type="checkbox" ng-model="detail.rsyncConfig.shortCommand"/>
                     </div>
                 </div>
 
@@ -54,7 +56,7 @@
                     <label for="delete" class="col-sm-5 control-label">Delete</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="delete" type="checkbox" ng-model="rsyncConfig.delete"/>
+                        <input id="delete" type="checkbox" ng-model="detail.rsyncConfig.delete"/>
                     </div>
                 </div>
 
@@ -62,7 +64,7 @@
                     <label for="delete-after" class="col-sm-5 control-label">delete-after</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="delete-after" type="checkbox" ng-model="rsyncConfig.deleteAfter"/>
+                        <input id="delete-after" type="checkbox" ng-model="detail.rsyncConfig.deleteAfter"/>
                     </div>
                 </div>
 
@@ -70,7 +72,7 @@
                     <label for="dry-run" class="col-sm-5 control-label">dry-run</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="dry-run" type="checkbox" ng-model="rsyncConfig.dryRun"/>
+                        <input id="dry-run" type="checkbox" ng-model="detail.rsyncConfig.dryRun"/>
                     </div>
                 </div>
 
@@ -78,21 +80,21 @@
                     <label for="archive" class="col-sm-5 control-label">archive</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="archive" type="checkbox" ng-model="rsyncConfig.archive"/>
+                        <input id="archive" type="checkbox" ng-model="detail.rsyncConfig.archive"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="one-file-system" class="col-sm-5 control-label">one-file-system</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="one-file-system" type="checkbox" ng-model="rsyncConfig.oneFileSystem"/>
+                        <input id="one-file-system" type="checkbox" ng-model="detail.rsyncConfig.oneFileSystem"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="verbose" class="col-sm-5 control-label">verbose</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="verbose" type="checkbox" ng-model="rsyncConfig.verbose"/>
+                        <input id="verbose" type="checkbox" ng-model="detail.rsyncConfig.verbose"/>
                     </div>
                 </div>
 
@@ -100,7 +102,7 @@
                     <label for="human-readable" class="col-sm-5 control-label">human-readable</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="human-readable" type="checkbox" ng-model="rsyncConfig.humanReadable"/>
+                        <input id="human-readable" type="checkbox" ng-model="detail.rsyncConfig.humanReadable"/>
                     </div>
                 </div>
 
@@ -108,7 +110,7 @@
                     <label for="progress" class="col-sm-5 control-label">progress</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="progress" type="checkbox" ng-model="rsyncConfig.progress"/>
+                        <input id="progress" type="checkbox" ng-model="detail.rsyncConfig.progress"/>
                     </div>
                 </div>
             </div>
@@ -117,35 +119,36 @@
                     <label for="log-file" class="col-sm-5 control-label">log-file</label>
 
                     <div class="col-sm-7">
-                        <input id="log-file" class="form-control" type="text" ng-model="rsyncConfig.logFile"/>
+                        <input id="log-file" class="form-control" type="text" ng-model="detail.rsyncConfig.logFile"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="filter-file" class="col-sm-5 control-label">filter-file</label>
 
                     <div class="col-sm-7">
-                        <input id="filter-file" class="form-control" type="text" ng-model="rsyncConfig.filterFile"/>
+                        <input id="filter-file" class="form-control" type="text"
+                               ng-model="detail.rsyncConfig.filterFile"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="rsync-src" class="col-sm-5 control-label">Rsync Source</label>
 
                     <div class="col-sm-7">
-                        <input id="rsync-src" class="form-control" type="text" ng-model="rsyncConfig.src"/>
+                        <input id="rsync-src" class="form-control" type="text" ng-model="detail.rsyncConfig.src"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="rsync-dest" class="col-sm-5 control-label">Rsync Destination</label>
 
                     <div class="col-sm-7">
-                        <input id="rsync-dest" class="form-control" type="text" ng-model="rsyncConfig.dest"/>
+                        <input id="rsync-dest" class="form-control" type="text" ng-model="detail.rsyncConfig.dest"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="itemize-changes" class="col-sm-5 control-label">itemize-changes</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="itemize-changes" type="checkbox" ng-model="rsyncConfig.itemizeChanges"/>
+                        <input id="itemize-changes" type="checkbox" ng-model="detail.rsyncConfig.itemizeChanges"/>
                     </div>
                 </div>
 
@@ -153,7 +156,7 @@
                     <label for="stats" class="col-sm-5 control-label">stats</label>
 
                     <div class="col-sm-7 checkbox">
-                        <input id="stats" type="checkbox" ng-model="rsyncConfig.stats"/>
+                        <input id="stats" type="checkbox" ng-model="detail.rsyncConfig.stats"/>
                     </div>
                 </div>
             </div>
@@ -163,15 +166,16 @@
                 <div class="form-group">
                     <label for="rsync-command">Rsync command</label>
                     <textarea id="rsync-command" class="form-control"
-                              rows="5">{{createTerminalCommand(rsyncConfig).asString()}}</textarea>
+                              rows="5">{{detail.createTerminalCommand(detail.rsyncConfig).asString()}}</textarea>
                 </div>
 
-                <button type="button" class="btn btn-primary" ng-click="spawnRsyncCommand()">Execute rsync command
+                <button type="button" class="btn btn-primary" ng-click="detail.spawnRsyncCommand()">Execute rsync
+                    command
                 </button>
 
                 <div class="form-group">
                     <label for="rsync-output">Rsync output</label>
-                    <textarea id="rsync-output" class="form-control" rows="80">{{rsyncOutput}}</textarea>
+                    <textarea id="rsync-output" class="form-control" rows="80">{{detail.rsyncOutput}}</textarea>
                 </div>
             </div>
         </div>

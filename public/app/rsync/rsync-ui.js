@@ -9,44 +9,35 @@ var RsyncConfig = require('rsync/rsync-command/rsync-config');
 var rsyncCommandFactory = require('rsync/rsync-command/rsync-command-factory');
 var rsyncRepository = require('rsync/rsync-command/rsync-repository');
 
-var rsync_ui_app_dependencies = [
-    'ui.router',
-    'ui.bootstrap',
-    'poc-ui'
-];
-
-angular.module('rsync-ui-app', rsync_ui_app_dependencies)
-    .config(function ($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise("/rsync");
-
+angular.module('rsync', [])
+    .config(function ($stateProvider) {
         $stateProvider
-            .state('rsync', {
-                url: "/rsync",
+            .state('rsync2', {
+                url: "/rsync2",
                 templateUrl: "app/rsync/rsync.html",
-                controller: 'RsyncCommandController'
+                controller: 'RsyncCommandController as detail'
             });
     })
     .controller('RsyncCommandController', ['$scope', function ($scope) {
+        var controller = this;
+        controller.rsyncConfig = new RsyncConfig();
+        controller.savedRsyncConfigNameToLoad = '';
 
-        // Todo: put controller on scope.
-        $scope.rsyncConfig = new RsyncConfig();
-        $scope.savedRsyncConfigNameToLoad = '';
+        controller.createTerminalCommand = rsyncCommandFactory.createTerminalCommand;
 
-        $scope.createTerminalCommand = rsyncCommandFactory.createTerminalCommand;
-
-        $scope.savedRsyncConfigs = undefined;
-        $scope.rsyncConfigOriginalName = undefined;
+        controller.savedRsyncConfigs = undefined;
+        controller.rsyncConfigOriginalName = undefined;
         loadSavedRsyncConfigs();
 
-        $scope.saveRsyncConfig = function () {
-            rsyncRepository.save($scope.rsyncConfig, function (error, savedRsyncConfig) {
+        controller.saveRsyncConfig = function () {
+            rsyncRepository.save(controller.rsyncConfig, function (error, savedRsyncConfig) {
                 if (error) {
                     console.error('Saving failed: ' + error);
                 } else {
                     loadSavedRsyncConfigs();
                     $scope.$apply(function () {
-                        $scope.rsyncConfig = savedRsyncConfig;
-                        $scope.rsyncConfigOriginalName = savedRsyncConfig.rsyncConfigName;
+                        controller.rsyncConfig = savedRsyncConfig;
+                        controller.rsyncConfigOriginalName = savedRsyncConfig.rsyncConfigName;
                     })
                 }
             });
@@ -58,32 +49,32 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
                     console.error('Loading failed: ' + error);
                 } else {
                     $scope.$apply(function () {
-                        $scope.savedRsyncConfigs = rsyncConfigs;
+                        controller.savedRsyncConfigs = rsyncConfigs;
                     });
                 }
             })
         }
 
-        $scope.loadSavedRsyncConfig = function () {
-            rsyncRepository.getByRsyncConfigName($scope.savedRsyncConfigNameToLoad, function (error, loadedSavedRsyncConfig) {
+        controller.loadSavedRsyncConfig = function () {
+            rsyncRepository.getByRsyncConfigName(controller.savedRsyncConfigNameToLoad, function (error, loadedSavedRsyncConfig) {
                 if (error) {
                     console.error('Load config failed: ' + error);
                 } else {
                     $scope.$apply(function () {
-                        $scope.rsyncConfig = loadedSavedRsyncConfig;
-                        $scope.rsyncConfigOriginalName = loadedSavedRsyncConfig.rsyncConfigName;
+                        controller.rsyncConfig = loadedSavedRsyncConfig;
+                        controller.rsyncConfigOriginalName = loadedSavedRsyncConfig.rsyncConfigName;
                     });
                 }
             });
         };
 
-        $scope.spawnRsyncCommand = function () {
-            $scope.rsyncOutput = '';
-            var command = rsyncCommandFactory.createTerminalCommand($scope.rsyncConfig);
+        controller.spawnRsyncCommand = function () {
+            controller.rsyncOutput = '';
+            var command = rsyncCommandFactory.createTerminalCommand(controller.rsyncConfig);
             var spawnedCommand = require('child_process').spawn(command.command, command.options);
             spawnedCommand.stdout.on('data', function (data) {
                 $scope.$apply(function () {
-                    $scope.rsyncOutput += data;
+                    controller.rsyncOutput += data;
                 });
             });
             spawnedCommand.stderr.on('data', function (data) {
@@ -94,8 +85,8 @@ angular.module('rsync-ui-app', rsync_ui_app_dependencies)
             });
         };
 
-        $scope.createNew = function () {
-            $scope.savedRsyncConfigNameToLoad = undefined;
-            $scope.rsyncConfig = new RsyncConfig();
+        controller.createNew = function () {
+            controller.savedRsyncConfigNameToLoad = undefined;
+            controller.rsyncConfig = new RsyncConfig();
         }
     }]);
