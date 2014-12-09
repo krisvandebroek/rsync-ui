@@ -22,12 +22,14 @@ angular.module('rsync-overview', [])
             _loadRsyncConfigs();
         };
 
-        controller.delete = function (rsyncConfig) {
-            rsyncRepository.delete(rsyncConfig, function (error) {
-                controller.error = error;
+        controller.remove = function (rsyncConfig) {
+            rsyncRepository.remove(rsyncConfig._id, function (error) {
+                $scope.$apply(function () {
+                    controller.error = error;
+                });
                 _loadRsyncConfigs();
             });
-        }
+        };
 
         function _loadRsyncConfigs() {
             rsyncRepository.findAll(function (error, rsyncConfigs) {

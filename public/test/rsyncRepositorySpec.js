@@ -296,12 +296,47 @@ describe('RsyncRepository', function () {
             ], function (error) {
                 done(error);
             })
-        })
+        });
         it('returns null if there is no matching item found', function (done) {
             rsyncRepository.getById('1234567890', verifyAsync(done, function (error, loadedRsyncConfig) {
                 expect(error).to.not.exist();
                 expect(loadedRsyncConfig).to.not.exist();
             }));
+        });
+    });
+
+    describe('#remove(id)', function () {
+        it('removes the rsync config with the given id from the repository', function (done) {
+            var rsyncConfig = aRsyncConfig().rsyncConfigName("dummyConfig").build();
+            async.series([
+                function (callback) {
+                    rsyncRepository.save(rsyncConfig, verifyAsync(callback, function (error, persistedRsyncConfig) {
+                        expect(error).to.not.exist();
+                        expect(persistedRsyncConfig).to.exist();
+                        expect(persistedRsyncConfig._id).to.exist();
+                        rsyncConfig = persistedRsyncConfig;
+                    }));
+                },
+                function (callback) {
+                    rsyncRepository.remove(rsyncConfig._id, verifyAsync(callback, function (error) {
+                        expect(error).to.not.exist();
+                    }));
+                },
+                function (callback) {
+                    rsyncRepository.getById(rsyncConfig._id, verifyAsync(callback, function (error, loadedRsyncConfig) {
+                        expect(error).to.not.exist();
+                        expect(loadedRsyncConfig).to.not.exist();
+                    }));
+                }
+            ], function (error) {
+                done(error);
+            })
+        });
+        it('does not throw error is the object to delete does not exist', function (done) {
+            rsyncRepository.remove('1234567890', function (error) {
+                expect(error).to.not.exist();
+                done();
+            });
         })
     });
 

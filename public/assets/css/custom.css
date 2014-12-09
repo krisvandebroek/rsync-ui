@@ -1,3 +1,11 @@
 .form-horizontal .form-group {
     margin-bottom: 5px;
 }
+
+.btn .glyphicon {
+    margin-right: 6px;
+}
+
+.btn.btn-icon .glyphicon {
+    margin-right: 0;
+}
