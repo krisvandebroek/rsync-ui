@@ -5,7 +5,7 @@
     </div>
     <div ng-show="detail.rsyncConfig" class="row col-xs-12">
         <h1>{{detail.rsyncConfig.rsyncConfigName}}</h1>
-        <small ng-show="detail.rsyncConfig.rsyncConfigName !== detail.rsyncConfigOriginalName">
+        <small ng-show="detail.rsyncConfig._id && detail.rsyncConfig.rsyncConfigName !== detail.rsyncConfigOriginalName">
             Original name: {{detail.rsyncConfigOriginalName}}
         </small>
     </div>
@@ -16,7 +16,7 @@
                 <input id="rsyncConfigName" class="form-control" type="text"
                        ng-model="detail.rsyncConfig.rsyncConfigName"/>
 
-                <button type="submit" class="btn btn-primary" ng-click="detail.createNew()">New</button>
+                <button class="btn btn-primary navbar-btn" ng-click="detail.gotoCreateRsyncConfig()">New</button>
                 <button type="submit" class="btn btn-primary" ng-click="detail.saveRsyncConfig()">Save as:
                 </button>
                 <div class="">

@@ -13,7 +13,7 @@ angular.module('rsync-detail', [])
                 controller: 'RsyncDetailController as detail'
             });
     })
-    .controller('RsyncDetailController', ['$scope', '$stateParams', function ($scope, $stateParams) {
+    .controller('RsyncDetailController', ['$scope', '$stateParams', '$state', function ($scope, $stateParams, $state) {
         var controller = this;
 
         var _init = function () {
@@ -42,7 +42,7 @@ angular.module('rsync-detail', [])
                 if (error) {
                     controller.error = error;
                 } else {
-                    // TODO: Redirect to edit page
+                    $state.go('rsync-detail', {id: savedRsyncConfig._id}, {reload: true});
                 }
             });
         };
@@ -62,6 +62,10 @@ angular.module('rsync-detail', [])
             spawnedCommand.on('close', function (code) {
                 console.log('ended with code: ' + code);
             });
+        };
+
+        controller.gotoCreateRsyncConfig = function () {
+            $state.go('rsync-detail', {id: null}, {reload: true});
         };
 
         _init();
