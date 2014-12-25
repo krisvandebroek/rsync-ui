@@ -48,6 +48,7 @@ angular.module('rsync-detail', [])
         };
 
         controller.spawnRsyncCommand = function () {
+            controller.rsyncOutput = '';
             var command = rsyncCommandFactory.createTerminalCommand(controller.rsyncConfig);
             var spawnedCommand = require('child_process').spawn(command.command, command.options);
             spawnedCommand.stdout.on('data', function (data) {
