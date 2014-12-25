@@ -1,0 +1,6 @@
+P /Backup Logs
++ .DS_Store
++ /
+H /Users/kris/Backup
+
+##### Backupped to HugeStorage

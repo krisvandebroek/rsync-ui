@@ -1,6 +1,7 @@
 var filterFileParser = require('rsync/rsync-command/filter-file-parser')
     , chai = require('chai')
-    , expect = chai.expect;
+    , expect = chai.expect
+    , path = require('path');
 
 var DIRECTORY = true;
 var FILE = false;
@@ -8,8 +9,7 @@ var FILE = false;
 describe.only('FilterFileParser', function () {
     describe('#parseFilterFile', function () {
         it('can parse a rsync filter file', function () {
-            filterFileParser.parseFilterFile('/Users/kris/rsyncFatStorage.txt');
-            filterFileParser.parseFilterFile('/Users/kris/rsyncHugeStorage.txt');
+            filterFileParser.parseFilterFile(path.join(__dirname, 'filterFile.txt'));
         });
     });
 
