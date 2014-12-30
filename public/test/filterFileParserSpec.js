@@ -1,3 +1,5 @@
+"use strict";
+
 var filterFileParser = require('rsync/rsync-command/filter-file-parser')
     , chai = require('chai')
     , expect = chai.expect
@@ -6,7 +8,7 @@ var filterFileParser = require('rsync/rsync-command/filter-file-parser')
 var DIRECTORY = true;
 var FILE = false;
 
-describe.only('FilterFileParser', function () {
+describe('FilterFileParser', function () {
     describe('#parseFilterFile', function () {
         it('can parse a rsync filter file', function () {
             filterFileParser.parseFilterFile(path.join(__dirname, 'filterFile.txt'));

@@ -1,3 +1,5 @@
+"use strict";
+
 var config = require('rsync/config/config');
 var IN_MEMORY_DB = '';
 
