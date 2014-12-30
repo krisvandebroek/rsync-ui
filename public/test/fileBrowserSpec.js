@@ -53,7 +53,7 @@ describe('FileBrowser', function () {
                     expect(node.children[0].collapsed).to.equal(true);
                     expect(node.children[1].path).to.equal(path.join(dummyDirPath, 'dummySubdir1'));
                     expect(node.children[1].isDirectory).to.equal(true);
-                    expect(node.children[1].bytes).to.equal(68);
+                    expect(node.children[1].bytes).to.equal(102);
                     expect(node.children[1].collapsed).to.equal(true);
                     done();
                 })
