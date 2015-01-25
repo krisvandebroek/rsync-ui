@@ -1,0 +1,22 @@
+<div id="rsync-overview" class="row">
+    <div class="col-xs-12" ng-show="overview.error">
+        {{overview.error}}
+    </div>
+    <div class="col-xs-12">
+        <ul>
+            <li>
+                <span ng-if="tree.rootNode.isDirectory"><a ng-click="tree.loadChildren(tree.rootNode)">{{tree.rootNode.path}}</a></span>
+                <span ng-if="!tree.rootNode.isDirectory">{{childNode.path}}</span>
+                <span ng-if="tree.rootNode.underBackup">(Backup)</span>
+                <ul ng-hide="tree.rootNode.collapsed">
+                    <li ng-repeat="childNode in tree.rootNode.children">
+                        <span ng-if="childNode.isDirectory"><a ng-click="tree.loadChildren(childNode)">{{childNode.name}}</a></span>
+                        <span ng-if="!childNode.isDirectory">{{childNode.name}}</span>
+                        <span ng-if="childNode.underBackup">(Backup)</span>
+                        <ng-include src="'app/rsync/tree-child-node.html'"></ng-include>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

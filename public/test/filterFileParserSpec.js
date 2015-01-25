@@ -11,7 +11,67 @@ var FILE = false;
 describe('FilterFileParser', function () {
     describe('#parseFilterFile', function () {
         it('can parse a rsync filter file', function () {
-            filterFileParser.parseFilterFile(path.join(__dirname, 'filterFile.txt'));
+            var filterFile = filterFileParser.parseFilterFile(path.join(__dirname, 'filterFile.txt'));
+            expect(filterFile.filterLines).to.have.lengthOf(4);
+            expect(filterFile.filterLines[0].original).to.be.equal('P /Backup Logs');
+            expect(filterFile.filterLines[1].original).to.be.equal('+ .DS_Store');
+            expect(filterFile.filterLines[2].original).to.be.equal('+ /');
+            expect(filterFile.filterLines[3].original).to.be.equal('H /Users/kris/Backup');
+        });
+    });
+
+    describe('FilterFile#shouldBackup', function () {
+        it('should backup if the first matching filterLine results in backup', function () {
+            var filterLine1 = filterFileParser.parseFilterLine('+ /Users/kris/Backup');
+            var filterLine2 = filterFileParser.parseFilterLine('- /Users/kris/Backup');
+            var filterFile = new filterFileParser.FilterFile([filterLine1, filterLine2]);
+            expect(filterFile.shouldBackup({path: '/Users/kris/Backup', isDirectory: true}, '/')).to.be.true();
+        });
+        it('should not backup if the first matching filterLine prevents backup', function () {
+            var filterLine1 = filterFileParser.parseFilterLine('- /Users/kris/Backup');
+            var filterLine2 = filterFileParser.parseFilterLine('+ /Users/kris/Backup');
+            var filterFile = new filterFileParser.FilterFile([filterLine1, filterLine2]);
+            expect(filterFile.shouldBackup({path: '/Users/kris/Backup', isDirectory: true}, '/')).to.be.false();
+        });
+        it('should backup if there is no matching filterLine', function () {
+            var filterLine1 = filterFileParser.parseFilterLine('- /Foo');
+            var filterFile = new filterFileParser.FilterFile([filterLine1]);
+            expect(filterFile.shouldBackup({path: '/Bar', isDirectory: true}, '/')).to.be.true();
+        });
+    });
+
+    describe('#parseFilterLine', function () {
+        it('should backup the matching file when filterType is +', function () {
+            var filterLine = filterFileParser.parseFilterLine('+ /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backup', isDirectory: true}, '/')).to.be.true();
+        });
+        it('should return null (undecided) for non-matching file when filterType is +', function () {
+            var filterLine = filterFileParser.parseFilterLine('+ /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backups', isDirectory: true}, '/')).to.be.null();
+        });
+        it('should not backup the matching file when filterType is -', function () {
+            var filterLine = filterFileParser.parseFilterLine('- /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backup', isDirectory: true}, '/')).to.be.false();
+        });
+        it('should return null (undecided) for non-matching file when filterType is -', function () {
+            var filterLine = filterFileParser.parseFilterLine('- /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backups', isDirectory: true}, '/')).to.be.null();
+        });
+        it('should not backup the matching file when filterType is H', function () {
+            var filterLine = filterFileParser.parseFilterLine('H /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backup', isDirectory: true}, '/')).to.be.false();
+        });
+        it('should return null (undecided) for non-matching file when filterType is H', function () {
+            var filterLine = filterFileParser.parseFilterLine('H /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backups', isDirectory: true}, '/')).to.be.null();
+        });
+        it('should return null (undecide) for matching file when filterType is P', function () {
+            var filterLine = filterFileParser.parseFilterLine('P /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backup', isDirectory: true}, '/')).to.be.null();
+        });
+        it('should return null (undecided) for non-matching file when filterType is H', function () {
+            var filterLine = filterFileParser.parseFilterLine('P /Users/kris/Backup');
+            expect(filterLine.shouldBackup({path: '/Users/kris/Backups', isDirectory: true}, '/')).to.be.null();
         });
     });
 
@@ -88,6 +148,18 @@ describe('FilterFileParser', function () {
             it('does not match with only part of the filename', function () {
                 var matcher = filterFileParser.parseFilterRule('Foo');
                 expect(matcher.matches('/Food', '/', FILE)).to.be.false();
+            });
+        });
+        describe('matcher with special characters', function () {
+            it('matches special characters literally', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/.ar');
+                expect(matcher.matches('/Foo/bar', '/', FILE)).to.be.false();
+            });
+        });
+        describe('file or directory with special characters', function () {
+            it('matches special characters literally', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/bar');
+                expect(matcher.matches('/Foo/.ar', '/', FILE)).to.be.false();
             });
         });
     });

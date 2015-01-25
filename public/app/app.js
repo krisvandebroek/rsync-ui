@@ -6,6 +6,7 @@ var rsync_ui_app_dependencies = [
     'rsync',
     'rsync-overview',
     'rsync-detail',
+    'rsync-tree',
     'poc-ui'
 ];
 

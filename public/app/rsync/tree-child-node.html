@@ -1,0 +1,8 @@
+<ul ng-hide="childNode.collapsed">
+    <li ng-repeat="childNode in childNode.children">
+        <span ng-if="childNode.isDirectory"><a ng-click="tree.loadChildren(childNode)">{{childNode.name}}</a></span>
+        <span ng-if="!childNode.isDirectory">{{childNode.name}}</span>
+        <span ng-if="childNode.underBackup">(Backup)</span>
+        <ng-include src="'app/rsync/tree-child-node.html'"></ng-include>
+    </li>
+</ul>
