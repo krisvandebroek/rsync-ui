@@ -13,17 +13,18 @@
         <div class="row col-xs-12">
             <form class="form-inline" role="form">
                 <div class="form-group">
-                    <!-- TODO: Redirect -->
                     <input id="rsyncConfigName" class="form-control" type="text"
                            ng-model="detail.rsyncConfig.rsyncConfigName"/>
 
                     <button class="btn btn-primary navbar-btn" ui-sref="rsync-detail()"
                             ui-sref-opts="{reload: true, inherit: false}">New
                     </button>
-                    <button type="submit" class="btn btn-primary" ng-click="detail.saveRsyncConfig()">Save as:
+                    <button ng-show="detail.rsyncConfig._id" type="submit" class="btn btn-primary"
+                            ng-click="detail.saveRsyncConfig()">Update
                     </button>
-                    <div class="">
-                    </div>
+                    <button ng-hide="detail.rsyncConfig._id" type="submit" class="btn btn-primary"
+                            ng-click="detail.saveRsyncConfig()">Save
+                    </button>
                 </div>
             </form>
         </div>

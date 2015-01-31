@@ -1,6 +1,7 @@
 "use strict";
 
 var rsyncRepository = require('rsync/rsync-command/rsync-repository');
+var RsyncConfig = require('rsync/rsync-command/rsync-config');
 
 angular.module('rsync-overview', [])
     .config(function ($stateProvider) {
@@ -26,6 +27,22 @@ angular.module('rsync-overview', [])
             rsyncRepository.remove(rsyncConfig._id, function (error) {
                 $scope.$apply(function () {
                     controller.error = error;
+                });
+                _loadRsyncConfigs();
+            });
+        };
+
+        controller.clone = function (rsyncConfig) {
+            var clone = rsyncConfig.clone();
+            clone.rsyncConfigName = clone.rsyncConfigName + " (copy)";
+            clone._id = undefined;
+            rsyncRepository.save(clone, function (error, savedClone) {
+                $scope.$apply(function () {
+                    if (error) {
+                        controller.error = error;
+                    } else {
+                        $state.go('rsync-detail', {id: savedClone._id});
+                    }
                 });
                 _loadRsyncConfigs();
             });
