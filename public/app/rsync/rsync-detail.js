@@ -65,10 +65,6 @@ angular.module('rsync-detail', [])
             });
         };
 
-        controller.gotoCreateRsyncConfig = function () {
-            $state.go('rsync-detail', {id: null}, {reload: true});
-        };
-
         _init();
     }])
 
