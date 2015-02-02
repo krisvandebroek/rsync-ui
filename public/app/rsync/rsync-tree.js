@@ -21,6 +21,7 @@ angular.module('rsync-tree', [])
             controller.error = undefined;
             controller.rootNode = undefined;
             controller.filterFile = undefined;
+            controller.onlyDirectories = false;
             controller.baseDir = '/';
 
             controller.filterFile = filterFileParser.parseFilterFile('/Users/kris/rsyncFatStorage.txt');
@@ -32,6 +33,16 @@ angular.module('rsync-tree', [])
                     node.underBackup = controller.filterFile.shouldBackup(node, controller.baseDir);
                 });
             });
+        };
+
+        controller.toggle = function (node) {
+            if (node.isDirectory) {
+                if (node.collapsed) {
+                    controller.loadChildren(node);
+                } else {
+                    controller.collapse(node);
+                }
+            }
         };
 
         controller.loadChildren = function (node) {
@@ -46,6 +57,12 @@ angular.module('rsync-tree', [])
                         });
                     });
                 })
+            }
+        };
+
+        controller.collapse = function (node) {
+            if (node.isDirectory) {
+                node.collapsed = true;
             }
         };
 
