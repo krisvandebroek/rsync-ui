@@ -6,31 +6,63 @@ var fileBrowser = require('rsync/file-browser')
     , path = require('path');
 
 describe('FileBrowser', function () {
-    describe('#getNode(path, callback)', function () {
-        it('can load a directory', function (done) {
+    describe('#getRootNode(path, callback)', function () {
+        it('can load a directory as a rootNode', function (done) {
             var currentDirPath = __dirname;
             var dummyDirPath = path.join(currentDirPath, 'dummyDir');
-            fileBrowser.getNode(dummyDirPath, function (error, node) {
+            fileBrowser.getRootNode(dummyDirPath, function (error, node) {
                 expect(error).to.not.exist();
                 expect(node).to.exist();
                 expect(node.path).to.equal(dummyDirPath);
                 expect(node.isDirectory).to.equal(true);
                 expect(node.bytes).to.be.greaterThan(0);
                 expect(node.collapsed).to.equal(true);
+                expect(node.parent).to.not.exist();
                 done();
             });
         });
 
-        it('can load a file', function (done) {
+        it('can load a directory as a childNode', function (done) {
+            var currentDirPath = __dirname;
+            var dummyDirPath = path.join(currentDirPath, 'dummyDir');
+            fileBrowser.getChildNode(currentDirPath, dummyDirPath, function (error, node) {
+                expect(error).to.not.exist();
+                expect(node).to.exist();
+                expect(node.path).to.equal(dummyDirPath);
+                expect(node.isDirectory).to.equal(true);
+                expect(node.bytes).to.be.greaterThan(0);
+                expect(node.collapsed).to.equal(true);
+                expect(node.parent).to.equal(currentDirPath);
+                done();
+            });
+        });
+
+        it('can load a file as a rootNode', function (done) {
             var currentDirPath = __dirname;
             var filePath = path.join(currentDirPath, 'dummyNode.txt');
-            fileBrowser.getNode(filePath, function (error, node) {
+            fileBrowser.getRootNode(filePath, function (error, node) {
                 expect(error).to.not.exist();
                 expect(node).to.exist();
                 expect(node.path).to.equal(filePath);
                 expect(node.isDirectory).to.equal(false);
                 expect(node.bytes).to.be.greaterThan(0);
                 expect(node.collapsed).to.equal(true);
+                expect(node.parent).to.not.exist();
+                done();
+            });
+        });
+
+        it('can load a file as a childNode', function (done) {
+            var currentDirPath = __dirname;
+            var filePath = path.join(currentDirPath, 'dummyNode.txt');
+            fileBrowser.getChildNode(currentDirPath, filePath, function (error, node) {
+                expect(error).to.not.exist();
+                expect(node).to.exist();
+                expect(node.path).to.equal(filePath);
+                expect(node.isDirectory).to.equal(false);
+                expect(node.bytes).to.be.greaterThan(0);
+                expect(node.collapsed).to.equal(true);
+                expect(node.parent).to.equal(currentDirPath);
                 done();
             });
         });
@@ -40,7 +72,7 @@ describe('FileBrowser', function () {
         it('can load the children of a directory', function (done) {
             var currentDirPath = __dirname;
             var dummyDirPath = path.join(currentDirPath, 'dummyDir');
-            fileBrowser.getNode(dummyDirPath, function (error, node) {
+            fileBrowser.getRootNode(dummyDirPath, function (error, node) {
                 expect(error).to.not.exist();
                 expect(node).to.exist();
                 fileBrowser.loadChildren(node, function (error, node) {
@@ -63,13 +95,14 @@ describe('FileBrowser', function () {
         it('can load a file', function (done) {
             var currentDirPath = __dirname;
             var filePath = path.join(currentDirPath, 'dummyNode.txt');
-            fileBrowser.getNode(filePath, function (error, node) {
+            fileBrowser.getRootNode(filePath, function (error, node) {
                 expect(error).to.not.exist();
                 expect(node).to.exist();
                 expect(node.path).to.equal(filePath);
                 expect(node.isDirectory).to.equal(false);
                 expect(node.bytes).to.be.greaterThan(0);
                 expect(node.collapsed).to.equal(true);
+                expect(node.parent).to.not.exist();
                 done();
             });
         });
