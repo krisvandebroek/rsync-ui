@@ -26,7 +26,7 @@ angular.module('rsync-tree', [])
 
             controller.filterFile = filterFileParser.parseFilterFile('/Users/kris/rsyncFatStorage.txt');
 
-            fileBrowser.getNode('/Users/kris/', function (error, node) {
+            fileBrowser.getRootNode('/Users/kris/', function (error, node) {
                 $scope.$apply(function () {
                     controller.error = error;
                     controller.rootNode = node;
@@ -45,15 +45,22 @@ angular.module('rsync-tree', [])
             }
         };
 
-        controller.loadChildren = function (node) {
-            if (node.isDirectory) {
-                fileBrowser.loadChildren(node, function (error, node) {
+        /**
+         * @param parentNode {RsyncNode}
+         */
+        controller.loadChildren = function (parentNode) {
+            if (parentNode.isDirectory) {
+                fileBrowser.loadChildren(parentNode, function (error, parentNode) {
                     $scope.$apply(function () {
                         controller.error = error;
-                        node.collapsed = false;
-                        node.underBackup = controller.filterFile.shouldBackup(node, controller.baseDir);
-                        _.forEach(node.children, function (childNode) {
-                            childNode.underBackup = controller.filterFile.shouldBackup(childNode, controller.baseDir);
+                        parentNode.collapsed = false;
+                        if (parentNode.parent != undefined) {
+                            parentNode.underBackup = parentNode.parent.underBackup && controller.filterFile.shouldBackup(parentNode, controller.baseDir);
+                        } else {
+                            parentNode.underBackup = controller.filterFile.shouldBackup(parentNode, controller.baseDir);
+                        }
+                        _.forEach(parentNode.children, function (childNode) {
+                            childNode.underBackup = parentNode.underBackup && controller.filterFile.shouldBackup(childNode, controller.baseDir);
                         });
                     });
                 })
