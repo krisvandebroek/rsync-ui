@@ -1,7 +1,8 @@
 "use strict";
 
-var rsyncRepository = require('rsync/rsync-command/rsync-repository');
-var RsyncConfig = require('rsync/rsync-command/rsync-config');
+var rsyncRepository = require('rsync/rsync-command/rsync-repository')
+    , RsyncConfig = require('rsync/rsync-command/rsync-config')
+    , fsUtils = require('filesystem/fs-utils');
 
 angular.module('rsync-overview', [])
     .config(function ($stateProvider) {
@@ -19,6 +20,7 @@ angular.module('rsync-overview', [])
         var _init = function () {
             controller.rsyncConfigs = undefined;
             controller.error = undefined;
+            controller.rsyncConfigDriveDetail = new Map();
 
             _loadRsyncConfigs();
         };
@@ -48,12 +50,27 @@ angular.module('rsync-overview', [])
             });
         };
 
+        function _loadDriveInfoForRsyncConfig(rsyncConfig) {
+            fsUtils.getDriveForPath(rsyncConfig.dest, function (error, driveDetail) {
+                $scope.$apply(function () {
+                    if (error) {
+                        controller.error = error;
+                    } else {
+                        controller.rsyncConfigDriveDetail.set(rsyncConfig.rsyncConfigName, driveDetail);
+                    }
+                });
+            });
+        }
+
         function _loadRsyncConfigs() {
             rsyncRepository.findAll(function (error, rsyncConfigs) {
                 $scope.$apply(function () {
                     controller.rsyncConfigs = rsyncConfigs;
-                })
-            })
+                });
+                _.each(rsyncConfigs, function (rsyncConfig) {
+                    _loadDriveInfoForRsyncConfig(rsyncConfig);
+                });
+            });
         }
 
         _init();
