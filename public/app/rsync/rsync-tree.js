@@ -1,6 +1,7 @@
 "use strict";
 
 var fileBrowser = require('rsync/file-browser')
+    , rsyncRepository = require('rsync/rsync-command/rsync-repository')
     , filterFileParser = require('rsync/rsync-command/filter-file-parser')
     , _ = require('underscore');
 
@@ -8,13 +9,13 @@ angular.module('rsync-tree', [])
     .config(function ($stateProvider) {
         $stateProvider
             .state('rsync-tree', {
-                url: "/rsync-tree",
+                url: "/rsync/:id/rsync-tree",
                 templateUrl: "app/rsync/rsync-tree.html",
                 controller: 'RsyncTreeController as tree'
             });
 
     })
-    .controller('RsyncTreeController', ['$scope', function ($scope) {
+    .controller('RsyncTreeController', ['$scope', '$stateParams', function ($scope, $stateParams) {
         var controller = this;
 
         var _init = function () {
@@ -22,15 +23,30 @@ angular.module('rsync-tree', [])
             controller.rootNode = undefined;
             controller.filterFile = undefined;
             controller.onlyDirectories = false;
-            controller.baseDir = '/';
+            controller.baseDir = undefined;
+            controller.rsyncConfig = undefined;
 
-            controller.filterFile = filterFileParser.parseFilterFile('/Users/kris/rsyncFatStorage.txt');
+            controller.filterFile = undefined;
 
-            fileBrowser.getRootNode('/Users/kris/', function (error, node) {
+            rsyncRepository.getById($stateParams.id, function (error, rsyncConfig) {
                 $scope.$apply(function () {
-                    controller.error = error;
-                    controller.rootNode = node;
-                    node.underBackup = controller.filterFile.shouldBackup(node, controller.baseDir);
+                    if (error) {
+                        controller.error = error;
+                    } else {
+                        controller.rsyncConfig = rsyncConfig;
+                        controller.baseDir = rsyncConfig.src;
+                        fileBrowser.getRootNode(rsyncConfig.src, function (error, node) {
+                            $scope.$apply(function () {
+                                if (error) {
+                                    controller.error = error;
+                                } else {
+                                    controller.rootNode = node;
+                                    controller.filterFile = filterFileParser.parseFilterFile(rsyncConfig.filterFile);
+                                    node.underBackup = controller.filterFile.shouldBackup(node, controller.baseDir);
+                                }
+                            });
+                        });
+                    }
                 });
             });
         };
