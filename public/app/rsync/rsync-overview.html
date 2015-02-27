@@ -21,8 +21,11 @@
                         </td>
                         <td class="col-xs-3">{{rsyncConfig.src}}</td>
                         <td class="col-xs-3">{{rsyncConfig.dest}} <br/>
-                            <small>({{overview.rsyncConfigDriveDetail.get(rsyncConfig.rsyncConfigName).available}}
-                                free)
+                            <small ng-show="overview.rsyncConfigDriveDetail.get(rsyncConfig.rsyncConfigName) != undefined">
+                                ({{overview.rsyncConfigDriveDetail.get(rsyncConfig.rsyncConfigName).available}}
+                                free<span
+                                    ng-show="overview.rsyncConfigDriveDetail.get(rsyncConfig.rsyncConfigName).fromCache"> @ {{overview.rsyncConfigDriveDetail.get(rsyncConfig.rsyncConfigName).timestamp | date:'mediumDate'}}</span>)
+
                             </small>
                         </td>
                         <td class="col-xs-2">

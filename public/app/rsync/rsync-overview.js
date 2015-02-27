@@ -2,7 +2,9 @@
 
 var rsyncRepository = require('rsync/rsync-command/rsync-repository')
     , RsyncConfig = require('rsync/rsync-command/rsync-config')
-    , fsUtils = require('filesystem/fs-utils');
+    , fsUtils = require('filesystem/fs-utils')
+    , async = require('async')
+    , documentRepository = require('document/document-repository');
 
 angular.module('rsync-overview', [])
     .config(function ($stateProvider) {
@@ -51,14 +53,40 @@ angular.module('rsync-overview', [])
         };
 
         function _loadDriveInfoForRsyncConfig(rsyncConfig) {
-            fsUtils.getDriveForPath(rsyncConfig.dest, function (error, driveDetail) {
-                $scope.$apply(function () {
-                    if (error) {
-                        controller.error = error;
-                    } else {
-                        controller.rsyncConfigDriveDetail.set(rsyncConfig.rsyncConfigName, driveDetail);
+            async.auto({
+                getDriveDetailFromFs: function (callback) {
+                    fsUtils.getDriveForPath(rsyncConfig.dest, function (error, driveDetail) {
+                        if (driveDetail) {
+                            driveDetail.documentType = 'RsyncDestDriveStats';
+                            driveDetail.key = rsyncConfig.dest;
+                            driveDetail.rsyncDestPath = rsyncConfig.dest;
+                            driveDetail.timestamp = Date.now();
+                        }
+                        callback(null, driveDetail);
+                    });
+                },
+                getDriveDetailFromCache: function (callback) {
+                    documentRepository.getByFilter({
+                        documentType: 'RsyncDestDriveStats',
+                        key: rsyncConfig.dest
+                    }, function (error, driveDetail) {
+                        if (driveDetail) {
+                            driveDetail.fromCache = true;
+                        }
+                        callback(null, driveDetail);
+                    });
+                },
+                setDriveDetailAndSaveToCache: ['getDriveDetailFromFs', 'getDriveDetailFromCache', function (callback, results) {
+                    var driveDetail = results.getDriveDetailFromFs || results.getDriveDetailFromCache;
+                    if (driveDetail) {
+                        documentRepository.save(driveDetail, function () {
+                        });
                     }
-                });
+                    $scope.$apply(function () {
+                        controller.rsyncConfigDriveDetail.set(rsyncConfig.rsyncConfigName, driveDetail);
+                    });
+                    callback();
+                }]
             });
         }
 

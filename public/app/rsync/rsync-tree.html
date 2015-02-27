@@ -22,7 +22,7 @@
                         <span ng-show="tree.rootNode.collapsed"><span class="glyphicon glyphicon-folder-close"> </span></span>
                         <span ng-hide="tree.rootNode.collapsed"><span
                                 class="glyphicon glyphicon-folder-open"> </span></span>
-                        {{tree.rootNode.path}}
+                        {{tree.rootNode.path}} <small>({{tree.rootNode.size}})</small>
                     </a>
                 </span>
                 <span ng-if="!tree.rootNode.isDirectory">

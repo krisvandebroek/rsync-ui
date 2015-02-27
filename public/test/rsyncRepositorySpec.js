@@ -1,11 +1,11 @@
 "use strict";
 
-var config = require('rsync/config/config');
+var config = require('db/config.js');
 var IN_MEMORY_DB = '';
 
 config.dbBasePath = IN_MEMORY_DB;
 
-var db = require('rsync/db')
+var db = require('db/db.js')
     , _ = require('underscore')
     , chai = require('chai')
     , should = chai.should()

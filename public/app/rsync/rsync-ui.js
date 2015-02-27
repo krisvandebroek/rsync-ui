@@ -1,6 +1,6 @@
 "use strict";
 
-var config = require('rsync/config/config');
+var config = require('db/config.js');
 var dataPath = require('nw.gui').App.dataPath;
 
 config.dbBasePath = dataPath;
