@@ -14,14 +14,15 @@
     margin-bottom: 10px;
 }
 
-.node-under-backup > span,
-.node-under-backup > span a,
-.node-under-backup > span a:hover {
+.node-under-backup > span {
     color: green;
 }
 
-.node-not-under-backup > span,
-.node-not-under-backup > span a,
-.node-not-under-backup > span a:hover {
+.node-not-under-backup > span {
     color: crimson;
+}
+
+.clickable:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }

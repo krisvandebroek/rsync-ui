@@ -15,40 +15,10 @@
         </form>
     </div>
     <div class="col-xs-12">
-        <ul>
-            <li ng-class="{'node-under-backup': tree.rootNode.underBackup, 'node-not-under-backup' : !tree.rootNode.underBackup}">
-                <span ng-if="tree.rootNode.isDirectory" ng-click="tree.toggle(tree.rootNode)">
-                    <a>
-                        <span ng-show="tree.rootNode.collapsed"><span class="glyphicon glyphicon-folder-close"> </span></span>
-                        <span ng-hide="tree.rootNode.collapsed"><span
-                                class="glyphicon glyphicon-folder-open"> </span></span>
-                        {{tree.rootNode.path}} <small>({{tree.rootNode.size}})</small>
-                    </a>
-                </span>
-                <span ng-if="!tree.rootNode.isDirectory">
-                    <span class="glyphicon glyphicon-file"> </span>
-                    {{tree.rootNode.path}}
-                </span>
-                <ul ng-hide="tree.rootNode.collapsed">
-                    <li ng-repeat="childNode in tree.rootNode.children"
-                        ng-hide="!childNode.isDirectory && tree.onlyDirectories"
-                        ng-class="{'node-under-backup': childNode.underBackup, 'node-not-under-backup' : !childNode.underBackup}">
-                        <span ng-if="childNode.isDirectory">
-                            <a ng-click="tree.toggle(childNode)">
-                                <span ng-show="childNode.collapsed"><span
-                                        class="glyphicon glyphicon-folder-close"> </span></span>
-                                <span ng-hide="childNode.collapsed"><span
-                                        class="glyphicon glyphicon-folder-open"> </span></span>
-                                {{childNode.name}}
-                            </a>
-                        </span>
-                        <span ng-if="!childNode.isDirectory && !tree.onlyDirectories">
-                            <span class="glyphicon glyphicon-file"> </span>
-                            {{childNode.name}}</span>
-                        <ng-include src="'app/rsync/tree-child-node.html'"></ng-include>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        <div ng-repeat="treeNode in [tree.rootNode]">
+            <ul>
+                <ng-include src="'app/rsync/tree-node.html'"></ng-include>
+            </ul>
+        </div>
     </div>
 </div>
