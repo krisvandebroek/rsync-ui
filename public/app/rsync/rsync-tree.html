@@ -4,11 +4,17 @@
     </div>
     <div class="col-xs-12 row-bottom-buffer">
         <form class="form-inline" role="form">
-            <div class="form-group">
-                <div class="checkbox">
+            <div class="form-group col-xs-12">
+                <div class="checkbox col-xs-2">
                     <label>
-                        <input id="short-command" type="checkbox" ng-model="tree.onlyDirectories"/>
+                        <input id="treeFilterOnlyDirectories" type="checkbox" ng-model="tree.filterOnlyDirectory"/>
                         Show only directories
+                    </label>
+                </div>
+                <div class="checkbox col-xs-2">
+                    <label>
+                        <input id="treeFilterUnderBackup" type="checkbox" ng-model="tree.filterUnderBackup"/>
+                        Show only under backup
                     </label>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 <li ng-class="{'node-under-backup': treeNode.underBackup, 'node-not-under-backup' : !treeNode.underBackup}"
-    ng-hide="(treeNode.parent && treeNode.parent.collapsed) || (treeNode.parent && !treeNode.isDirectory && tree.onlyDirectories)">
+    ng-hide="treeNode.parent && (treeNode.parent.collapsed || !tree.isVisible(treeNode))">
     <span ng-click="treeNode.isDirectory && tree.toggle(treeNode)" ng-class="{'clickable': treeNode.isDirectory}">
         <span ng-show="treeNode.isDirectory && treeNode.collapsed"><span
                 class="glyphicon glyphicon-folder-close"> </span></span>

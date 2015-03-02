@@ -22,7 +22,8 @@ angular.module('rsync-tree', [])
             controller.error = undefined;
             controller.rootNode = undefined;
             controller.filterFile = undefined;
-            controller.onlyDirectories = false;
+            controller.filterOnlyDirectory = false;
+            controller.filterUnderBackup = false;
             controller.baseDir = undefined;
             controller.rsyncConfig = undefined;
 
@@ -87,6 +88,11 @@ angular.module('rsync-tree', [])
             if (node.isDirectory) {
                 node.collapsed = true;
             }
+        };
+
+        controller.isVisible = function (node) {
+            return (!controller.filterOnlyDirectory || node.isDirectory)
+                && (!controller.filterUnderBackup || node.underBackup);
         };
 
         _init();
