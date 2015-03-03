@@ -57,7 +57,7 @@ describe('fs-utils', function () {
     });
 
     describe('#getSize()', function () {
-        it.only('can retrieve the size of a file', function (done) {
+        it('can retrieve the size of a file', function (done) {
             var filePath = path.resolve(__dirname, './tmpFile');
             async.series([
                 function (callback) {
@@ -77,7 +77,7 @@ describe('fs-utils', function () {
                 done();
             });
         });
-        it.only('can retrieve the size of a directory', function (done) {
+        it('can retrieve the size of a directory', function (done) {
             var dirPath = path.resolve(__dirname, './tmpDir');
             var filePath1 = path.resolve(dirPath, './tmpFile1');
             var filePath2 = path.resolve(dirPath, './tmpFile2');

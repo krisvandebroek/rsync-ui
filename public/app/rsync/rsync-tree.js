@@ -3,7 +3,9 @@
 var fileBrowser = require('rsync/file-browser')
     , rsyncRepository = require('rsync/rsync-command/rsync-repository')
     , filterFileParser = require('rsync/rsync-command/filter-file-parser')
-    , _ = require('underscore');
+    , _ = require('underscore')
+    , fsUtils = require('filesystem/fs-utils')
+    , filesize = require('filesize');
 
 angular.module('rsync-tree', [])
     .config(function ($stateProvider) {
@@ -43,13 +45,22 @@ angular.module('rsync-tree', [])
                                 } else {
                                     controller.rootNode = node;
                                     controller.filterFile = filterFileParser.parseFilterFile(rsyncConfig.filterFile);
-                                    node.underBackup = controller.filterFile.shouldBackup(node, controller.baseDir);
+                                    controller.nodeLoaded(node);
                                 }
                             });
                         });
                     }
                 });
             });
+        };
+
+        controller.nodeLoaded = function (node) {
+            controller.loadCachedSizes(node);
+            if (node.parent != undefined) {
+                node.underBackup = node.parent.underBackup && controller.filterFile.shouldBackup(node, controller.baseDir);
+            } else {
+                node.underBackup = controller.filterFile.shouldBackup(node, controller.baseDir);
+            }
         };
 
         controller.toggle = function (node) {
@@ -71,13 +82,9 @@ angular.module('rsync-tree', [])
                     $scope.$apply(function () {
                         controller.error = error;
                         parentNode.collapsed = false;
-                        if (parentNode.parent != undefined) {
-                            parentNode.underBackup = parentNode.parent.underBackup && controller.filterFile.shouldBackup(parentNode, controller.baseDir);
-                        } else {
-                            parentNode.underBackup = controller.filterFile.shouldBackup(parentNode, controller.baseDir);
-                        }
+                        controller.nodeLoaded(parentNode);
                         _.forEach(parentNode.children, function (childNode) {
-                            childNode.underBackup = parentNode.underBackup && controller.filterFile.shouldBackup(childNode, controller.baseDir);
+                            controller.nodeLoaded(childNode);
                         });
                     });
                 })
@@ -93,6 +100,22 @@ angular.module('rsync-tree', [])
         controller.isVisible = function (node) {
             return (!controller.filterOnlyDirectory || node.isDirectory)
                 && (!controller.filterUnderBackup || node.underBackup);
+        };
+
+        controller.calculate = function (node) {
+            fsUtils.getSize(node.path, function (error, size) {
+                $scope.$apply(function () {
+                    controller.error = error;
+                    node.size = filesize(size);
+                    controller.loadCachedSizes(controller.rootNode);
+                });
+            });
+        };
+
+        controller.loadCachedSizes = function (node) {
+            var cachedSize = fsUtils.getCachedSize(node.path);
+            node.size = cachedSize && filesize(cachedSize);
+            _.each(node.children, controller.loadCachedSizes);
         };
 
         _init();

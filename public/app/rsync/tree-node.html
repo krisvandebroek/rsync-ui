@@ -1,13 +1,19 @@
 <li ng-class="{'node-under-backup': treeNode.underBackup, 'node-not-under-backup' : !treeNode.underBackup}"
-    ng-hide="treeNode.parent && (treeNode.parent.collapsed || !tree.isVisible(treeNode))">
-    <span ng-click="treeNode.isDirectory && tree.toggle(treeNode)" ng-class="{'clickable': treeNode.isDirectory}">
-        <span ng-show="treeNode.isDirectory && treeNode.collapsed"><span
-                class="glyphicon glyphicon-folder-close"> </span></span>
-        <span ng-show="treeNode.isDirectory && !treeNode.collapsed"><span
-                class="glyphicon glyphicon-folder-open"> </span></span>
-        <span ng-show="!treeNode.isDirectory"><span class="glyphicon glyphicon-file"> </span></span>
-        <span ng-show="treeNode.parent">{{treeNode.name}}</span>
-        <span ng-show="!treeNode.parent">{{treeNode.path}}</span>
+    ng-hide="treeNode.parent && (treeNode.parent.collapsed || !tree.isVisible(treeNode))"
+        >
+    <span ng-mouseenter="treeNode.showCalculate = true" ng-mouseleave="treeNode.showCalculate = false">
+        <span ng-click="treeNode.isDirectory && tree.toggle(treeNode)" ng-class="{'clickable': treeNode.isDirectory}">
+            <span ng-show="treeNode.isDirectory && treeNode.collapsed"><span
+                    class="glyphicon glyphicon-folder-close"> </span></span>
+            <span ng-show="treeNode.isDirectory && !treeNode.collapsed"><span
+                    class="glyphicon glyphicon-folder-open"> </span></span>
+            <span ng-show="!treeNode.isDirectory"><span class="glyphicon glyphicon-file"> </span></span>
+            <span ng-show="treeNode.parent">{{treeNode.name}}</span>
+            <span ng-show="!treeNode.parent">{{treeNode.path}}</span>
+            <small ng-show="treeNode.size"> ({{treeNode.size}})</small>
+        </span>
+        <span class="glyphicon glyphicon-info-sign clickable" ng-show="treeNode.showCalculate"
+              ng-click="tree.calculate(treeNode);"> </span>
     </span>
     <ul>
         <ng-include src="'app/rsync/tree-node.html'" ng-repeat="treeNode in treeNode.children"></ng-include>

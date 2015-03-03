@@ -22,7 +22,7 @@
     color: crimson;
 }
 
-.clickable:hover {
+.clickable:hover, .clickable:hover span {
     text-decoration: underline;
     cursor: pointer;
 }
