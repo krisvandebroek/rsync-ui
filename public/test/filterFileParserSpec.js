@@ -124,6 +124,60 @@ describe('FilterFileParser', function () {
                 expect(matcher.matches('/Foo/X/Y/Z/Bar', '/', FILE)).to.be.true();
             });
         });
+        describe('matcher with * wildcard', function () {
+            it('[subdirectory] matches the directory itself', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/*');
+                expect(matcher.matches('/Foo/', '/', DIRECTORY)).to.be.true();
+            });
+            it('[subdirectory] matches subdirectories', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/*');
+                expect(matcher.matches('/Foo/Bar/', '/', DIRECTORY)).to.be.true();
+            });
+            it('[subdirectory] matches files in the directory', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/*');
+                expect(matcher.matches('/Foo/Bar', '/', FILE)).to.be.true();
+            });
+            it('[subdirectory] does not match files in any subdirectory', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/*');
+                expect(matcher.matches('/Foo/X/Y/Z/Bar', '/', FILE)).to.be.false();
+            });
+            it('[top level directory] matches the directory itself', function () {
+                var matcher = filterFileParser.parseFilterRule('/*');
+                expect(matcher.matches('/', '/', DIRECTORY)).to.be.true();
+            });
+            it('[top level directory] matches subdirectories', function () {
+                var matcher = filterFileParser.parseFilterRule('/*');
+                expect(matcher.matches('/Bar/', '/', DIRECTORY)).to.be.true();
+            });
+            it('[top level directory] matches files in the directory', function () {
+                var matcher = filterFileParser.parseFilterRule('/*');
+                expect(matcher.matches('/Bar', '/', FILE)).to.be.true();
+            });
+            it('[top level directory] does not match files in any subdirectory', function () {
+                var matcher = filterFileParser.parseFilterRule('/*');
+                expect(matcher.matches('/Foo/X/Y/Z/Bar', '/', FILE)).to.be.false();
+            });
+        });
+        describe('matcher that contains * wildcard', function () {
+            it('matches only one level of subdirectories', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/*/Bar');
+                expect(matcher.matches('/Foo/One/Bar', '/', DIRECTORY)).to.be.true();
+            });
+            it('does not match multiple levels subdirectories', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/*/Bar');
+                expect(matcher.matches('/Foo/One/Two/Bar', '/', DIRECTORY)).to.be.false();
+            });
+        });
+        describe('matcher that contains *** wildcard', function () {
+            it('matches one level of subdirectories', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/***/Bar');
+                expect(matcher.matches('/Foo/One/Bar', '/', DIRECTORY)).to.be.true();
+            });
+            it('matches multiple levels of subdirectories', function () {
+                var matcher = filterFileParser.parseFilterRule('/Foo/***/Bar');
+                expect(matcher.matches('/Foo/Two/Bar', '/', DIRECTORY)).to.be.true();
+            });
+        });
         describe('sub-level matcher without wildcards', function () {
             it('matches a directory with the given name', function () {
                 var matcher = filterFileParser.parseFilterRule('Foo');

@@ -4,7 +4,8 @@ var rsyncRepository = require('rsync/rsync-command/rsync-repository')
     , RsyncConfig = require('rsync/rsync-command/rsync-config')
     , fsUtils = require('filesystem/fs-utils')
     , async = require('async')
-    , documentRepository = require('document/document-repository');
+    , documentRepository = require('document/document-repository')
+    , filesize = require('filesize');
 
 angular.module('rsync-overview', [])
     .config(function ($stateProvider) {
@@ -23,6 +24,7 @@ angular.module('rsync-overview', [])
             controller.rsyncConfigs = undefined;
             controller.error = undefined;
             controller.rsyncConfigDriveDetail = new Map();
+            controller.rsyncConfigBackupSize = new Map();
 
             _loadRsyncConfigs();
         };
@@ -49,6 +51,12 @@ angular.module('rsync-overview', [])
                     }
                 });
                 _loadRsyncConfigs();
+            });
+        };
+
+        controller.calculateBackupSize = function () {
+            _.each(controller.rsyncConfigs, function (rsyncConfig) {
+                _loadBackupSize(rsyncConfig);
             });
         };
 
@@ -87,6 +95,14 @@ angular.module('rsync-overview', [])
                     });
                     callback();
                 }]
+            });
+        }
+
+        function _loadBackupSize(rsyncConfig) {
+            fsUtils.getSize(rsyncConfig.dest, function (error, size) {
+                $scope.$apply(function () {
+                    controller.rsyncConfigBackupSize.set(rsyncConfig.rsyncConfigName, filesize(size));
+                });
             });
         }
 
